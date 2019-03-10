@@ -63,6 +63,14 @@ function wc_gateway_xrp_init() {
             }
             add_action( 'woocommerce_api_wc_gateway_xrp', array( $this, 'check_ledger' ) );
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+
+            if ( $this->has_xrp_data() === false ) {
+                add_action( 'admin_notices', array( $this, 'require_xrp' ) );
+            }
+
+            if ($this->enabled == 'yes') {
+                $this->check_webhooks();
+            }
         }
 
 
@@ -79,37 +87,26 @@ function wc_gateway_xrp_init() {
 
         /**
          * Display an error that all XRP related data is required.
-         *
-         * Unfortunately, a "Your settings has been saved" message is shown as well and
-         * can't really be removed without lots of ugly hacks.
          */
         public function require_xrp() {
-            echo '<div class="notice notice-error"><p>You <b>need</b> to specify your <b>XRP Account</b> and <b>XRPL Webhook</b> details before you can use this payment gateway.</p></div>';
+            echo '<div class="notice notice-error"><p>Before you can use this payment gateway, you <b>must</b> specify a <b>XRP Account</b> and your <b>XRPL Webhook</b> details.</p></div>';
         }
 
         /**
-         * Process admin options and setup hooks.
+         * Save settings and reload.
          */
         public function process_admin_options() {
-            if ( $this->has_xrp_data() === false ) {
-                add_action( 'admin_notices', array( $this, 'require_xrp' ) );
-                return false;
-            }
+            parent::process_admin_options();
 
-            $saved = parent::process_admin_options();
-
-            if ($this->enabled == 'yes') {
-                $this->setup_webhooks();
-            }
-
-            return $saved;
+            wp_redirect($_SERVER['REQUEST_URI']);
+            exit;
         }
 
 
         /**
          * Setup our webhook and subscriptions
          */
-        public function setup_webhooks() {
+        public function check_webhooks() {
             include_once dirname( __FILE__ ) . '/includes/class-webhooks.php';
             $wh = new Webhook( $this->get_option( 'xrpl_webhook_api_pub' ), $this->get_option( 'xrpl_webhook_api_priv' ) );
 
@@ -236,14 +233,12 @@ function wc_gateway_xrp_init() {
                     'description' => 'The number of transactions to fetch from the ledger each time we check for new payments.',
                     'default'     => 10,
                 ),
-
             ) );
-
         }
 
 
         public function has_xrp_data() {
-            if ( empty( $this->xrp_wallet ) ) {
+            if ( empty( $this->xrp_account ) ) {
                 return false;
             }
 
