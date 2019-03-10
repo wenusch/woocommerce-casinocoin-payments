@@ -269,9 +269,6 @@ function wc_gateway_xrp_init() {
          * Parse the most recent transactions and match them against our orders.
          */
         public function check_ledger() {
-            $this->setup_webhooks();
-
-        exit;
             $node = $this->get_option( 'xrp_node' );
             if ( ! ($ch = curl_init( $node )) ) {
                 return false;
