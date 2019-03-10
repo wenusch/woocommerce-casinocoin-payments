@@ -58,18 +58,49 @@ function wc_gateway_xrp_init() {
             $this->init_form_fields();
             $this->init_settings();
 
+            if ( ! in_array( get_woocommerce_currency(), array( 'EUR', 'USD' ) ) ) {
+                add_action( 'admin_notices', array( $this, 'supported_currencies' ) );
+            }
             add_action( 'woocommerce_api_wc_gateway_xrp', array( $this, 'check_ledger' ) );
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         }
 
 
         /**
+         * Display an error that the current currency is unsupported.
+         */
+        public function supported_currencies() {
+            printf(
+                '<div class="notice notice-error"><p>Your current currency (<b>%s</b>) is not supported yet. Please use <b>USD</b> or <b>EUR</b> with for now.</p></div>',
+                get_woocommerce_currency()
+            );
+        }
+
+
+        /**
+         * Display an error that all XRP related data is required.
+         *
+         * Unfortunately, a "Your settings has been saved" message is shown as well and
+         * can't really be removed without lots of ugly hacks.
+         */
+        public function require_xrp() {
+            echo '<div class="notice notice-error"><p>You <b>need</b> to specify your <b>XRP Account</b> and <b>XRPL Webhook</b> details before you can use this payment gateway.</p></div>';
+        }
+
+        /**
          * Process admin options and setup hooks.
          */
         public function process_admin_options() {
+            if ( $this->has_xrp_data() === false ) {
+                add_action( 'admin_notices', array( $this, 'require_xrp' ) );
+                return false;
+            }
+
             $saved = parent::process_admin_options();
 
-            $this->setup_webhooks();
+            if ($this->enabled == 'yes') {
+                $this->setup_webhooks();
+            }
 
             return $saved;
         }
@@ -208,6 +239,23 @@ function wc_gateway_xrp_init() {
 
             ) );
 
+        }
+
+
+        public function has_xrp_data() {
+            if ( empty( $this->xrp_wallet ) ) {
+                return false;
+            }
+
+            if ( empty( $this->xrpl_webhook_api_pub ) ) {
+                return false;
+            }
+
+            if ( empty( $this->xrpl_webhook_api_priv ) ) {
+                return false;
+            }
+
+            return true;
         }
 
 
