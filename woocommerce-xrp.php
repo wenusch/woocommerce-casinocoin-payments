@@ -320,6 +320,9 @@ function wc_gateway_xrp_init() {
          */
         public function check_ledger() {
             $node = $this->get_option( 'xrp_node' );
+            if ( empty( $node ) ) {
+                $node = 'https://s2.ripple.com:51234';
+            }
             if ( ! ($ch = curl_init( $node )) ) {
                 return false;
             }
