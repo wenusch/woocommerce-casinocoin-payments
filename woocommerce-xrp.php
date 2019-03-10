@@ -309,7 +309,9 @@ function wc_gateway_xrp_init() {
                 return false;
             }
 
-            foreach ($res->result->transactions as $tx) {
+            $rev = array_reverse($res->result->transactions);
+
+            foreach ($rev as $tx) {
                 if ( $tx->tx->TransactionType != 'Payment' || $tx->tx->Destination != $account || !isset($tx->tx->DestinationTag) ) {
                     continue;
                 }
