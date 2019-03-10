@@ -68,6 +68,10 @@ function wc_gateway_xrp_init() {
                 add_action( 'admin_notices', array( $this, 'require_xrp' ) );
             }
 
+            if ( ! function_exists('curl_init') ) {
+                add_action( 'admin_notices', array( $this, 'require_curl' ) );
+            }
+
             if ($this->enabled == 'yes') {
                 $this->check_webhooks();
             }
@@ -91,6 +95,15 @@ function wc_gateway_xrp_init() {
         public function require_xrp() {
             echo '<div class="notice notice-error"><p>Before you can use this payment gateway, you <b>must</b> specify a <b>XRP Account</b> and your <b>XRPL Webhook</b> details.</p></div>';
         }
+
+
+        /**
+         * Display an error explaining that cURL is required.
+         */
+        public function require_curl() {
+            echo '<div class="notice notice-error"><p>You must have <b>cURL</b> installed for this payment gateway to work properly.</p></div>';
+        }
+
 
         /**
          * Save settings and reload.
@@ -255,6 +268,10 @@ function wc_gateway_xrp_init() {
 
 
         public function process_payment( $order_id ) {
+            if ( ! function_exists('curl_init') ) {
+                return false;
+            }
+
             $order = wc_get_order( $order_id );
 
             /* specity where to obtain our rates from. */
