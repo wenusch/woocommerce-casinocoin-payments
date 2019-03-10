@@ -244,7 +244,7 @@ function wc_gateway_xrp_init() {
             }
 
             /* calculate the amount in XRP. */
-            $xrp = (float)$order->get_total() / $rate->last;
+            $xrp = round( ceil( ( $order->get_total() / $rate->last ) * 1000000 ) / 1000000, 6);
 
             /* try to get the destination tag as random as possible. */
             if ( function_exists( 'random_int' ) ) {
