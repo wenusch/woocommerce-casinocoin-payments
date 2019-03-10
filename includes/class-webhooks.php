@@ -14,7 +14,7 @@ class Webhook {
 
 
     public function subscriptions() {
-        if ( empty( $url ) || empty( $this->pub ) || empty( $this->secret ) ) {
+        if ( empty( $this->pub ) || empty( $this->secret ) ) {
             return false;
         }
 
@@ -44,7 +44,7 @@ class Webhook {
 
 
     public function add_subscription( $address ) {
-        if ( empty( $url ) || empty( $this->pub ) || empty( $this->secret ) ) {
+        if ( empty( $address ) || empty( $this->pub ) || empty( $this->secret ) ) {
             return false;
         }
 
@@ -78,7 +78,7 @@ class Webhook {
 
 
     public function webhooks() {
-        if ( empty( $url ) || empty( $this->pub ) || empty( $this->secret ) ) {
+        if ( empty( $this->pub ) || empty( $this->secret ) ) {
             return false;
         }
 
