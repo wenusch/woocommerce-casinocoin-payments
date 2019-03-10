@@ -258,6 +258,8 @@ function wc_gateway_xrp_init() {
             $order->add_meta_data( 'delivered_amount', '0' );
             $order->save_meta_data();
 
+            WC()->cart->empty_cart();
+
             return array(
                 'result' => 'success',
                 'redirect' => $this->get_return_url( $order ),
