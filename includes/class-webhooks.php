@@ -1,21 +1,19 @@
 <?php
 
-class Webhook
-{
+class Webhook {
+
     protected $pub;
     protected $secret;
     public $base = 'https://webhook.xrpayments.co/';
 
 
-    public function __construct( $pub, $secret )
-    {
+    public function __construct( $pub, $secret ) {
         $this->pub = $pub;
         $this->secret = $secret;
     }
 
 
-    public function subscriptions()
-    {
+    public function subscriptions() {
         if ( empty( $url ) || empty( $this->pub ) || empty( $this->secret ) ) {
             return false;
         }
