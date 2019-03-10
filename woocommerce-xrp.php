@@ -79,20 +79,20 @@ function wc_gateway_xrp_init() {
          * Setup our webhook and subscriptions
          */
         public function setup_webhooks() {
-			include_once dirname( __FILE__ ) . '/includes/class-webhooks.php';
-            $wh = new Webhook( $this->xrpl_webhook_api_pub, $this->xrpl_webhook_api_priv );
+            include_once dirname( __FILE__ ) . '/includes/class-webhooks.php';
+            $wh = new Webhook( $this->get_option( 'xrpl_webhook_api_pub' ), $this->get_option( 'xrpl_webhook_api_priv' ) );
 
             /* subscriptions */
             $subs = $wh->subscriptions();
             $exists = false;
             foreach ($subs as $sub) {
-                if ($sub->address == $this->xrp_account) {
+                if ($sub->address == $this->get_option( 'xrp_account' ) ) {
                     $exists = true;
                     break;
                 }
             }
             if ($exists == false) {
-                echo $wh->add_subscription( $this->xrp_account );
+                $wh->add_subscription( $this->get_option( 'xrp_account' ) );
             }
 
             /* webhooks */
@@ -106,7 +106,7 @@ function wc_gateway_xrp_init() {
                 }
             }
             if ($exists == false) {
-                echo $wh->add_webhook( $url );
+                $wh->add_webhook( $url );
             }
 
             return true;
