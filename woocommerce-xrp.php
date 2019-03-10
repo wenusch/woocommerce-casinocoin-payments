@@ -403,13 +403,44 @@ function thankyou_xrp_payment_info( $order_id ){
                 <th>XRP left to pay</th>
                 <td colspan="2"><?php echo round( (float)get_post_meta( $order_id, 'total_amount', true ) - (float)get_post_meta( $order_id, 'delivered_amount', true ) , 0 ) ?></td>
             </tr>
+            <tr>
+                <th>Order status</th>
+                <td colspan="2">
+                <?php
+                switch (get_post_status( $order_id )) {
+                    case 'wc-pending':
+                        echo 'Pending payment';
+                        break;
+                    case 'wc-processing':
+                        echo 'Processing (Paid)';
+                        break;
+                    case 'wc-on-hold':
+                        echo 'On hold';
+                        break;
+                    case 'wc-completed':
+                        echo 'Completed';
+                        break;
+                    case 'wc-cancelled':
+                        echo 'Cancelled';
+                        break;
+                    case 'wc-refunded':
+                        echo 'Refunded';
+                        break;
+                    case 'wc-failed':
+                        echo 'Failed';
+                        break;
+                }
+                ?>
+                </td>
+            </tr>
         </tbody>
     </table>
-
+    <?php if (get_post_status( $order_id ) == 'wc-pending') { ?>
     <script type="text/javascript">
-        window.setTimeout(function(){ document.location.reload(true); }, 30000);
+        window.setTimeout(function(){ document.location.reload(true); }, 10000);
     </script>
-<?php
+    <?php
+    }
 }
 add_action( 'woocommerce_thankyou', 'thankyou_xrp_payment_info', 10 );
 add_action( 'woocommerce_view_order', 'thankyou_xrp_payment_info', 10 );
