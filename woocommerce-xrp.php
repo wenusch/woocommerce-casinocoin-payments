@@ -313,7 +313,6 @@ function wc_gateway_xrp_init() {
                 if ( $tx->tx->TransactionType != 'Payment' || $tx->tx->Destination != $account || !isset($tx->tx->DestinationTag) ) {
                     continue;
                 }
-
                 $orders = wc_get_orders( array( 'destination_tag' => $tx->tx->DestinationTag ) );
                 if ( empty( $orders ) ) {
                     continue;
@@ -327,6 +326,7 @@ function wc_gateway_xrp_init() {
                 $delivered_amount = $orders[0]->get_meta( 'delivered_amount' );
                 $delivered_amount += $tx->tx->Amount / 1000000;
                 $orders[0]->update_meta_data( 'delivered_amount', $delivered_amount );
+                $orders[0]->save_meta_data();
 
                 $total_amount = $orders[0]->get_meta('total_amount');
 
