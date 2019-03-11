@@ -391,12 +391,22 @@ function wc_gateway_xrp_init() {
                 if ( empty( $orders ) ) {
                     continue;
                 }
+
+                /* keep track of the sequence number */
                 $seq = $orders[0]->get_meta('last_sequence');
                 if ( $seq != '' && $tx->tx->Sequence <= (int)$seq ) {
                     continue;
                 }
                 $orders[0]->update_meta_data( 'last_sequence', $tx->tx->Sequence );
 
+                /* store the tx hash */
+                $txlist = explode( ',', $orders[0]->get_meta( 'tx' ) );
+                if ( ! in_array( $tx->tx->hash, $txlist ) ) {
+                    array_push( $txlist, $tx->tx->hash );
+                }
+                $orders[0]->update_meta_data( 'tx', implode(',', $txlist) );
+
+                /* update the delivered_amount */
                 $delivered_amount = $orders[0]->get_meta( 'delivered_amount' );
                 $delivered_amount += $tx->tx->Amount / 1000000;
                 $orders[0]->update_meta_data( 'delivered_amount', $delivered_amount );
