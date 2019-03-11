@@ -464,7 +464,7 @@ function thankyou_xrp_payment_info( $order_id ){
     <h2>XRP payment details</h2>
     <div class="xrp_qr">
         <?php if ( get_post_status( $order_id ) == 'wc-pending' ) { ?>
-        <img src="https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=M|0&chl=https%3A%2F%2Fripple.com%2Fsend%3Fto%3D<?php echo urlencode($account) ?>%26dt%3D<?php echo get_post_meta( $order_id, 'destination_tag', true ) ?>%26amount%3D<?php echo urlencode($remaining) ?>&choe=UTF-8">
+        <img src="https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=M|0&chl=https%3A%2F%2Fripple.com%2Fsend%3Fto%3D<?php echo urlencode($gateway->settings['xrp_accont']) ?>%26dt%3D<?php echo get_post_meta( $order_id, 'destination_tag', true ) ?>%26amount%3D<?php echo urlencode($remaining) ?>&choe=UTF-8">
         <?php } ?>
     </div>
     <table class="woocommerce-table shop_table xrp_info">
