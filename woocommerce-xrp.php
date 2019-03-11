@@ -484,7 +484,7 @@ function thankyou_xrp_payment_info( $order_id ){
             </tr>
             <tr>
                 <th>XRP left to pay</th>
-                <td colspan="2"><?php echo round( (float)get_post_meta( $order_id, 'total_amount', true ) - (float)get_post_meta( $order_id, 'delivered_amount', true ) , 0 ) ?></td>
+                <td colspan="2"><?php echo round( (float)get_post_meta( $order_id, 'total_amount', true ) - (float)get_post_meta( $order_id, 'delivered_amount', true ) , 6 ) ?></td>
             </tr>
             <tr>
                 <th>Order status</th>
