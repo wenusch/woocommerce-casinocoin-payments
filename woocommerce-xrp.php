@@ -459,10 +459,13 @@ add_filter( 'woocommerce_order_data_store_cpt_get_orders_query', 'handle_destina
  */
 function thankyou_xrp_payment_info( $order_id ){
     $gateway = new WC_Gateway_XRP;
+    $remaining = round( (float)get_post_meta( $order_id, 'total_amount', true ) - (float)get_post_meta( $order_id, 'delivered_amount', true ) , 6 );
  ?>
     <h2>XRP payment details</h2>
     <div class="xrp_qr">
-        <img src="https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=M|0&chl=https%3A%2F%2Fripple.com%2Fsend%3Fto%3D<?php echo urlencode($account) ?>%26dt%3D<?php echo get_post_meta( $order_id, 'destination_tag', true ) ?>&choe=UTF-8">
+        <?php if ( get_post_status( $order_id ) == 'wc-pending' ) { ?>
+        <img src="https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=M|0&chl=https%3A%2F%2Fripple.com%2Fsend%3Fto%3D<?php echo urlencode($account) ?>%26dt%3D<?php echo get_post_meta( $order_id, 'destination_tag', true ) ?>%26amount%3D<?php echo urlencode($remaining) ?>&choe=UTF-8">
+        <?php } ?>
     </div>
     <table class="woocommerce-table shop_table xrp_info">
         <tbody>
@@ -484,13 +487,13 @@ function thankyou_xrp_payment_info( $order_id ){
             </tr>
             <tr>
                 <th>XRP left to pay</th>
-                <td colspan="2"><?php echo round( (float)get_post_meta( $order_id, 'total_amount', true ) - (float)get_post_meta( $order_id, 'delivered_amount', true ) , 6 ) ?></td>
+                <td colspan="2"><?php echo $remaining ?></td>
             </tr>
             <tr>
                 <th>Order status</th>
                 <td colspan="2">
                 <?php
-                switch (get_post_status( $order_id )) {
+                switch ( get_post_status( $order_id ) ) {
                     case 'wc-pending':
                         echo 'Pending payment';
                         break;
@@ -520,7 +523,7 @@ function thankyou_xrp_payment_info( $order_id ){
     </table>
     <?php if (get_post_status( $order_id ) == 'wc-pending') { ?>
     <script type="text/javascript">
-        window.setTimeout(function(){ document.location.reload(true); }, 10000);
+        window.setTimeout(function(){ document.location.reload(true); }, 30000);
     </script>
     <?php
     }
