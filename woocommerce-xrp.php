@@ -313,6 +313,15 @@ function wc_gateway_xrp_init() {
                 $tag = mt_rand( 1, 4294967295 );
             }
 
+            /**
+             * make sure the tag hasn't been used already,
+             * if so, bail out and have the user try again.
+             */
+            $orders = wc_get_orders( array( 'destination_tag' => $tag ) );
+            if ( ! empty( $orders ) ) {
+                return false;
+            }
+
             $order->add_meta_data( 'total_amount', $xrp );
             $order->add_meta_data( 'destination_tag', $tag );
             $order->add_meta_data( 'delivered_amount', '0' );
