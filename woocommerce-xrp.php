@@ -386,7 +386,7 @@ function wc_gateway_xrp_init() {
             $rev = array_reverse($res->result->transactions);
 
             foreach ($rev as $tx) {
-                if ( $tx->tx->TransactionType != 'Payment' || $tx->tx->Destination != $account || !isset($tx->tx->DestinationTag) ) {
+                if ( $tx->tx->TransactionType != 'Payment' || $tx->tx->Destination != $account || !isset($tx->tx->DestinationTag) || $tx->tx->DestinationTag == 0 ) {
                     continue;
                 }
                 $orders = wc_get_orders( array( 'destination_tag' => $tx->tx->DestinationTag ) );
@@ -395,7 +395,7 @@ function wc_gateway_xrp_init() {
                 }
 
                 /* keep track of the sequence number */
-                $seq = $orders[0]->get_meta('last_sequence');
+                $seq = $orders[0]->get_meta( 'last_sequence' );
                 if ( $seq != '' && $tx->tx->Sequence <= (int)$seq ) {
                     continue;
                 }
@@ -414,7 +414,7 @@ function wc_gateway_xrp_init() {
                 $orders[0]->update_meta_data( 'delivered_amount', $delivered_amount );
                 $orders[0]->save_meta_data();
 
-                $total_amount = $orders[0]->get_meta('total_amount');
+                $total_amount = $orders[0]->get_meta( 'total_amount' );
 
                 if ($delivered_amount >= $total_amount) {
                     $orders[0]->update_status( 'processing', __( sprintf( '%s XRP received', $delivered_amount ), 'wc-gateway-xrp' ) );
