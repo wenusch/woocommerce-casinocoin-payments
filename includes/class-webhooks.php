@@ -19,6 +19,11 @@ class Webhook {
             return false;
         }
 
+        if ( ! function_exists( 'curl_init' ) ) {
+            $this->error = 'cURL is missing!';
+            return false;
+        }
+
         if ( ! ( $ch = curl_init( $this->base . 'api/v1/subscriptions' ) ) ) {
             $this->error = 'Unable to initiate cURL';
             return false;
@@ -49,6 +54,11 @@ class Webhook {
     public function add_subscription( $address ) {
         if ( empty( $address ) || empty( $this->pub ) || empty( $this->secret ) ) {
             $this->error = 'Please specify both the API key and secret';
+            return false;
+        }
+
+        if ( ! function_exists( 'curl_init' ) ) {
+            $this->error = 'cURL is missing!';
             return false;
         }
 
@@ -89,6 +99,11 @@ class Webhook {
             return false;
         }
 
+        if ( ! function_exists( 'curl_init' ) ) {
+            $this->error = 'cURL is missing!';
+            return false;
+        }
+
         if ( ! ($ch = curl_init( $this->base . 'api/v1/webhooks' )) ) {
             $this->error = 'Unable to initiate cURL';
             return false;
@@ -119,6 +134,11 @@ class Webhook {
     public function add_webhook( $url ) {
         if ( empty( $url ) || empty( $this->pub ) || empty( $this->secret ) ) {
             $this->error = 'Please specify both the API key and secret';
+            return false;
+        }
+
+        if ( ! function_exists( 'curl_init' ) ) {
+            $this->error = 'cURL is missing!';
             return false;
         }
 
