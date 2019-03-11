@@ -457,76 +457,119 @@ add_filter( 'woocommerce_order_data_store_cpt_get_orders_query', 'handle_destina
 /*
  * Customize the "thank you" page in order to display payment info.
  */
-function thankyou_xrp_payment_info( $order_id ){
+function thankyou_xrp_payment_info( $order_id ) {
     $gateway = new WC_Gateway_XRP;
     $remaining = round( (float)get_post_meta( $order_id, 'total_amount', true ) - (float)get_post_meta( $order_id, 'delivered_amount', true ) , 6 );
  ?>
     <h2>XRP payment details</h2>
-    <div class="xrp_qr">
+    <div class="xrp_qr_container">
         <?php if ( get_post_status( $order_id ) == 'wc-pending' ) { ?>
-        <img src="https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=M|0&chl=https%3A%2F%2Fripple.com%2Fsend%3Fto%3D<?php echo urlencode($gateway->settings['xrp_accont']) ?>%26dt%3D<?php echo get_post_meta( $order_id, 'destination_tag', true ) ?>%26amount%3D<?php echo urlencode($remaining) ?>&choe=UTF-8">
+        <img id="xrp_qr" src="<?php echo xrp_qr( $gateway->settings['xrp_account'], get_post_meta( $order_id, 'destination_tag', true ), $remaining ) ?>">
         <?php } ?>
     </div>
     <table class="woocommerce-table shop_table xrp_info">
         <tbody>
             <tr>
                 <th>XRP Account:</th>
-                <td><?php echo _x( $gateway->settings['xrp_account'] ) ?></td>
+                <td id="xrp_account"><?php echo _x( $gateway->settings['xrp_account'] ) ?></td>
             </tr>
             <tr>
                 <th>Destination tag</th>
-                <td colspan="2"><?php echo get_post_meta( $order_id, 'destination_tag', true ) ?></td>
+                <td id="destination_tag"><?php echo get_post_meta( $order_id, 'destination_tag', true ) ?></td>
             </tr>
             <tr>
                 <th>XRP total</th>
-                <td colspan="2"><?php echo round( get_post_meta( $order_id, 'total_amount', true ), 6 ) ?></td>
+                <td id="xrp_total"><?php echo round( get_post_meta( $order_id, 'total_amount', true ), 6 ) ?></td>
             </tr>
             <tr>
                 <th>XRP received</th>
-                <td colspan="2"><?php echo round( get_post_meta( $order_id, 'delivered_amount', true ), 6 ) ?></td>
+                <td id="xrp_received"><?php echo round( get_post_meta( $order_id, 'delivered_amount', true ), 6 ) ?></td>
             </tr>
             <tr>
                 <th>XRP left to pay</th>
-                <td colspan="2"><?php echo $remaining ?></td>
+                <td id="xrp_remaining"><?php echo $remaining ?></td>
             </tr>
             <tr>
                 <th>Order status</th>
-                <td colspan="2">
-                <?php
-                switch ( get_post_status( $order_id ) ) {
-                    case 'wc-pending':
-                        echo 'Pending payment';
-                        break;
-                    case 'wc-processing':
-                        echo 'Processing (Paid)';
-                        break;
-                    case 'wc-on-hold':
-                        echo 'On hold';
-                        break;
-                    case 'wc-completed':
-                        echo 'Completed';
-                        break;
-                    case 'wc-cancelled':
-                        echo 'Cancelled';
-                        break;
-                    case 'wc-refunded':
-                        echo 'Refunded';
-                        break;
-                    case 'wc-failed':
-                        echo 'Failed';
-                        break;
-                }
-                ?>
-                </td>
+                <td id="xrp_status"><?php echo wc_pretty_status( get_post_status( $order_id ) ) ?></td>
             </tr>
         </tbody>
     </table>
-    <?php if (get_post_status( $order_id ) == 'wc-pending') { ?>
-    <script type="text/javascript">
-        window.setTimeout(function(){ document.location.reload(true); }, 30000);
-    </script>
     <?php
+
+    if (get_post_status( $order_id ) == 'wc-pending') {
+        wp_enqueue_script( 'ajax-script', plugins_url( '/js/checkout.js', __FILE__ ), array('jquery') );
+        wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'order_id' => $order_id ) );
     }
 }
 add_action( 'woocommerce_thankyou', 'thankyou_xrp_payment_info', 10 );
 add_action( 'woocommerce_view_order', 'thankyou_xrp_payment_info', 10 );
+
+// Same handler function...
+add_action( 'wp_ajax_xrp_checkout', 'xrp_checkout_handler' );
+add_action( 'wp_ajax_nopriv_xrp_checkout', 'xrp_checkout_handler' );
+function xrp_checkout_handler() {
+    $order = wc_get_order( $_POST['order_id'] );
+
+    if ( $order == false) {
+        header('HTTP/1.0 404 Not Found');
+        wp_die();
+    }
+
+    $gateway      = new WC_Gateway_XRP;
+    $tag          = get_post_meta( $_POST['order_id'], 'destination_tag', true );
+    $xrp_total    = round( get_post_meta( $_POST['order_id'], 'total_amount', true ), 6 );
+    $xrp_received = round( get_post_meta( $_POST['order_id'], 'delivered_amount', true ), 6 );
+    $remaining    = round( (float)$xrp_total - (float)$xrp_received , 6 );
+    $status       = get_post_status( $_POST['order_id'] );
+
+    $result = array(
+        'xrp_account'   => $gateway->settings['xrp_account'],
+        'tag'           => $tag,
+        'xrp_total'     => $xrp_total,
+        'xrp_received'  => $xrp_received,
+        'xrp_remaining' => $remaining,
+        'status'        => wc_pretty_status( $status ),
+        'qr'            => xrp_qr( $gateway->settings['xrp_account'], $tag, $remaining ),
+        'raw_status'    => $status
+    );
+
+    echo json_encode($result);
+	wp_die();
+}
+
+
+function xrp_qr( $account, $tag, $amount ) {
+    $data = sprintf(
+        'https://ripple.com/send?to=%s&dt=%s&amount=%s',
+        $account,
+        $tag,
+        $amount
+    );
+    return sprintf(
+        'https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=M|0&chl=%s&choe=UTF-8',
+        urlencode( $data )
+    );
+}
+
+
+function wc_pretty_status( $status ) {
+    switch ( $status ) {
+        case 'wc-pending':
+            return 'Pending payment';
+        case 'wc-processing':
+            return 'Processing (Paid)';
+        case 'wc-on-hold':
+            return 'On hold';
+        case 'wc-completed':
+            return 'Completed';
+        case 'wc-cancelled':
+            return 'Cancelled';
+        case 'wc-refunded':
+            return 'Refunded';
+        case 'wc-failed':
+            return 'Failed';
+        default:
+            return 'Unknown';
+    }
+}
