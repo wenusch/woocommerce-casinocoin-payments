@@ -482,7 +482,7 @@ function thankyou_xrp_payment_info( $order_id ) {
     <table class="woocommerce-table shop_table xrp_info">
         <tbody>
             <tr>
-                <th><?php _e( 'XRP Account:', 'wc-gateway-xrp' ); ?></th>
+                <th><?php _e( 'XRP Account', 'wc-gateway-xrp' ); ?></th>
                 <td id="xrp_account"><?php echo _x( $gateway->settings['xrp_account'] ) ?></td>
             </tr>
             <tr>
