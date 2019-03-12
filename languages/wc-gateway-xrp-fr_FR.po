@@ -45,7 +45,7 @@ msgid ""
 "Webhook</b> details.</p></div>"
 msgstr ""
 "<div class=\"notice notice-error\"><p>Avant de pouvoir utiliser cette "
-"passerelle de paiement, vous <b>devez </b> spécifier un <b>compte XRP</b> et "
+"passerelle de paiement, vous <b>devez</b> spécifier un <b>compte XRP</b> et "
 "vos détails <b>XRPL Webhook</b>.</p></div>"
 
 #: woocommerce-xrp.php:114
@@ -54,10 +54,10 @@ msgid ""
 "or <b>XRPL Webhook</b> details are invalid. Please correct these for the "
 "<b>XRP Payment Gateway</b> to work properly.</p></div>"
 msgstr ""
-"<div class=\"notice notice-error\"><p> Le compte <b> XRP spécifié</b> et/ou "
+"<div class=\"notice notice-error\"><p> Le compte <b>XRP spécifié</b> et/ou "
 "<b>les détails XRPL Webhook</b> ne sont pas valides. S'il vous plaît "
 "corriger ceci pour que la <b>Passerelle de Paiement XRP</b> fonctionne "
-"correctement. </p> </div>"
+"correctement.</p></div>"
 
 #: woocommerce-xrp.php:122
 msgid ""
@@ -101,7 +101,7 @@ msgstr ""
 msgid "Pay using the XRP ledger."
 msgstr "Payer en utilisant le XRP ledger."
 
-#: woocommerce-xrp.php:221 woocommerce-xrp.php:227
+#: woocommerce-xrp.php:221 woocommerce-xrp.php:227 woocommerce-xrp.php:480
 msgid "XRP Account"
 msgstr "Compte XRP"
 
@@ -179,10 +179,6 @@ msgstr ""
 #: woocommerce-xrp.php:471
 msgid "XRP payment details"
 msgstr "Détails de paiement XRP"
-
-#: woocommerce-xrp.php:480
-msgid "XRP Account:"
-msgstr "Compte XRP:"
 
 #: woocommerce-xrp.php:484
 msgid "Destination tag"
