@@ -351,9 +351,6 @@ function wc_gateway_xrp_init() {
             if ( empty( $node ) ) {
                 $node = 'https://s2.ripple.com:51234';
             }
-            if ( ! ($ch = curl_init( $node )) ) {
-                return false;
-            }
 
             $account = $this->get_option( 'xrp_account' );
             if ( empty( $account ) ) {
@@ -375,16 +372,10 @@ function wc_gateway_xrp_init() {
                 ]]
             ];
 
-            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-            curl_setopt( $ch, CURLOPT_HEADER, false );
-            curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $payload ) );
+            $curl = new Curl( $node );
+            $curl->post( json_encode($payload) );
 
-            $data = curl_exec( $ch );
-            $info = curl_getinfo( $ch );
-
-            curl_close( $ch );
-
-            if ($info['http_code'] !== 200 || ($res = json_decode( $data )) == null ) {
+            if ($curl->info['http_code'] !== 200 || ($res = json_decode( $curl->data )) == null ) {
                 return false;
             }
 
@@ -478,7 +469,7 @@ function thankyou_xrp_payment_info( $order_id ) {
         <tbody>
             <tr>
                 <th><?php _e( 'XRP Account', 'wc-gateway-xrp' ); ?></th>
-                <td id="xrp_account"><?php echo _x( $gateway->settings['xrp_account'] ) ?></td>
+                <td id="xrp_account"><?php echo _x( $gateway->settings['xrp_account'] , 'wc-gateway-xrp' ) ?></td>
             </tr>
             <tr>
                 <th><?php _e( 'Destination tag', 'wc-gateway-xrp' ); ?></th>
