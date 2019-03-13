@@ -26,6 +26,7 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
 
 include_once dirname( __FILE__ ) . '/includes/class-curl.php';
 include_once dirname( __FILE__ ) . '/includes/class-webhooks.php';
+include_once dirname( __FILE__ ) . '/includes/class-rates.php';
 
 
 /**
@@ -266,6 +267,23 @@ function wc_gateway_xrp_init() {
                     'type'        => 'text',
                     'description' => __( 'Which XRP node to use when checking our balance.', 'wc-gateway-xrp' ),
                     'default'     => 'https://s2.ripple.com:51234',
+                    'desc_tip'    => true,
+                ),
+
+                'exchange' => array(
+                    'title'       => __( 'Exchange', 'wc-gateway-xrp' ),
+                    'type'        => 'select',
+                    'description' => __( 'Which exchange to use when fetching the XRP rate.', 'wc-gateway-xrp' ),
+                    'options'     => array(
+                        'binance'  => 'Binance',
+                        'bitfinex' => 'Bitfinex',
+                        'bitmex'   => 'BitMEX',
+                        'bitstamp' => 'Bitstamp Ltd',
+                        'bittrex'  => 'Bittrex',
+                        'kraken'   => 'Kraken',
+                    ),
+                    'default'     => 'bitstamp',
+                    'desc_tip'    => true,
                 ),
 
                 'tx_limit' => array(
@@ -273,6 +291,7 @@ function wc_gateway_xrp_init() {
                     'type'        => 'number',
                     'description' => __( 'The number of transactions to fetch from the ledger each time we check for new payments.', 'wc-gateway-xrp' ),
                     'default'     => 10,
+                    'desc_tip'    => true,
                 ),
             ) );
         }
@@ -282,43 +301,18 @@ function wc_gateway_xrp_init() {
          * Process the order and calculate the price in XRP.
          */
         public function process_payment( $order_id ) {
-            if ( ! function_exists('curl_init') ) {
-                return false;
-            }
-
             $order = wc_get_order( $order_id );
 
             /* specity where to obtain our rates from. */
-            /* todo: make this a select and be able to pick from different sources. */
-            if ( $order->get_currency() === 'EUR' ) {
-                $rates = 'https://www.bitstamp.net/api/v2/ticker/xrpeur/';
-            } elseif ( $order->get_currency() === 'USD' ) {
-                $rates = 'https://www.bitstamp.net/api/v2/ticker/xrpusd/';
-            } else {
-                return false;
-            }
+            $rates = new Rates( $order->get_currency() );
+            $rate  = $rates->get_rate( $this->settings['exchange'] );
 
-            /* use curl, if available. */
-            if ( ! ($ch = curl_init( $rates )) ) {
-                return false;
-            }
-
-            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-            curl_setopt( $ch, CURLOPT_HEADER, false );
-            curl_setopt( $ch, CURLOPT_HTTPGET, true );
-
-            $body = curl_exec($ch);
-            $info = curl_getinfo($ch);
-
-            curl_close($ch);
-
-            /* todo: perhaps add some caching here in case bitstamp is offline. */
-            if ( ($rate = json_decode( $body )) === null ) {
+            if ( $rate === false ) {
                 return false;
             }
 
             /* calculate the amount in XRP. */
-            $xrp = round( ceil( ( $order->get_total() / $rate->last ) * 1000000 ) / 1000000, 6);
+            $xrp = round( ceil( ( $order->get_total() / $rate ) * 1000000 ) / 1000000, 6);
 
             /* try to get the destination tag as random as possible. */
             if ( function_exists( 'random_int' ) ) {
