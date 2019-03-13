@@ -8,7 +8,7 @@ class Curl {
     public $error = false;
 
     public function __construct( $url, $headers = null ) {
-        if ( $this->has_curl() == false) {
+        if ( $this->has_curl() == false ) {
             return false;
         }
 
@@ -60,6 +60,10 @@ class Curl {
 
 
     public function get() {
+        if ( $this->ch == false ) {
+            return false;
+        }
+
         curl_setopt( $this->ch, CURLOPT_HTTPGET, true );
 
         return $this->execute();
@@ -67,6 +71,10 @@ class Curl {
 
 
     public function post( $data = null ) {
+        if ( $this->ch == false ) {
+            return false;
+        }
+
         curl_setopt( $this->ch, CURLOPT_POST, true );
 
         if ( ! is_null( $data ) ) {

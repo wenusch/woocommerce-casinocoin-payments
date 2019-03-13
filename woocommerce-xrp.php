@@ -78,19 +78,18 @@ function wc_gateway_xrp_init() {
                 return true;
             }
 
-            if ( ! function_exists('curl_init') ) {
+            if ( ! function_exists( 'curl_init' ) ) {
                 add_action( 'admin_notices', array( $this, 'require_curl' ) );
+            } elseif ( empty( $this->settings['xrp_account'] ) || empty( $this->settings['xrpl_webhook_api_pub'] ) || empty( $this->settings['xrpl_webhook_api_priv'] ) ) {
+                 add_action( 'admin_notices', array( $this, 'require_xrp' ) );
+            } elseif ( $this->check_webhooks() === false ) {
+                 add_action( 'admin_notices', array( $this, 'invalid_xrp' ) );
             }
 
             if ( ! in_array( get_woocommerce_currency(), array( 'EUR', 'USD' ) ) ) {
                 add_action( 'admin_notices', array( $this, 'supported_currencies' ) );
             }
 
-            if ( empty( $this->settings['xrp_account'] ) || empty( $this->settings['xrpl_webhook_api_pub'] ) || empty( $this->settings['xrpl_webhook_api_priv'] ) ) {
-                 add_action( 'admin_notices', array( $this, 'require_xrp' ) );
-            } elseif ( $this->check_webhooks() === false ) {
-                 add_action( 'admin_notices', array( $this, 'invalid_xrp' ) );
-            }
 
             $this->init_form_fields();
         }
