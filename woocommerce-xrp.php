@@ -24,6 +24,9 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
     return;
 }
 
+include_once dirname( __FILE__ ) . '/includes/class-curl.php';
+include_once dirname( __FILE__ ) . '/includes/class-webhooks.php';
+
 
 /**
  * Load translations.
@@ -143,36 +146,35 @@ function wc_gateway_xrp_init() {
                 return false;
             }
 
-            include_once dirname( __FILE__ ) . '/includes/class-webhooks.php';
             $wh = new Webhook( $this->settings['xrpl_webhook_api_pub'], $this->settings['xrpl_webhook_api_priv'] );
 
-            /* subscriptions */
-            if ( ! ( $subs = $wh->subscriptions() ) ) {
-                return false;
-            }
-            $exists = false;
-            foreach ( $subs as $sub ) {
-                if ( $sub->address == $this->settings['xrp_account'] ) {
-                    $exists = true;
-                    break;
-                }
-            }
-            if ($exists == false && $wh->add_subscription( $this->settings['xrp_account'] ) == false ) {
-                return false;
-            }
-
             /* webhooks */
-            if ( ! ( $hooks = $wh->webhooks() ) ) {
+            if ( ( $hooks = $wh->webhooks() ) === false ) {
                 return false;
             }
             $url = WC()->api_request_url( 'WC_Gateway_XRP' );
             $exists = false;
             foreach ( $hooks as $hook ) {
                 if ( $hook->url == $url ) {
+                    $exists = true;
+                    break;
+                }
+            }
+            if ($exists === false && $wh->add_webhook( $url ) === false ) {
+                return false;
+            }
+
+            /* subscriptions */
+            if ( ( $subs = $wh->subscriptions() ) === false ) {
+                return false;
+            }
+            $exists = false;
+            foreach ( $subs as $sub ) {
+                if ( $sub->address == $this->settings['xrp_account'] ) {
                     return true;
                 }
             }
-            if ($exists == false && $wh->add_webhook( $url ) == false ) {
+            if ($exists === false && $wh->add_subscription( $this->settings['xrp_account'] ) === false ) {
                 return false;
             }
 
