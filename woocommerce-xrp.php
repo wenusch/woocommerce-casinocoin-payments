@@ -354,7 +354,8 @@ function wc_gateway_xrp_init() {
 
             $account = $this->get_option( 'xrp_account' );
             if ( empty( $account ) ) {
-                return false;
+                echo "no account specified";
+                exit;
             }
 
             $limit = (int)$this->get_option( 'tx_limit' );
@@ -376,7 +377,8 @@ function wc_gateway_xrp_init() {
             $curl->post( json_encode($payload) );
 
             if ($curl->info['http_code'] !== 200 || ($res = json_decode( $curl->data )) == null ) {
-                return false;
+                echo "unable to reach the XRP ledger.";
+                exit;
             }
 
             $rev = array_reverse($res->result->transactions);
@@ -418,6 +420,7 @@ function wc_gateway_xrp_init() {
                 }
             }
 
+            echo "ok";
             exit;
         }
     }
