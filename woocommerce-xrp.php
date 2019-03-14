@@ -215,7 +215,7 @@ function wc_gateway_xrp_init() {
                     'title'       => __( 'Description', 'wc-gateway-xrp' ),
                     'type'        => 'textarea',
                     'description' => __( 'Payment method description that the customer will see on your checkout.', 'wc-gateway-xrp' ),
-                    'default'     => __( 'Pay using the XRP ledger.', 'wc-gateway-xrp' ),
+                    'default'     => __( 'Payment instruction will be shown once you\'ve placed your order.', 'wc-gateway-xrp' ),
                     'desc_tip'    => true,
                 ),
 
