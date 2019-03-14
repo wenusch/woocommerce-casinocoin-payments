@@ -7,6 +7,7 @@ class Webhook {
     public $base = 'https://webhook.xrpayments.co/';
     public $error = null;
 
+
     public function __construct( $pub, $secret ) {
         $this->pub = $pub;
         $this->secret = $secret;
@@ -100,7 +101,6 @@ class Webhook {
         if ( $curl->post( $payload ) === false ) {
             return false;
         }
-
 
         if ( $curl->info['http_code'] !== 200 || ( $res = json_decode( $curl->data ) ) == null ) {
             return false;
