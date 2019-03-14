@@ -107,7 +107,7 @@ function wc_gateway_xrp_init() {
          * Display an error that all XRP related data is required.
          */
         public function require_xrp() {
-            _e( '<div class="notice notice-error"><p>Before you can use this payment gateway, you <b>must</b> specify a <b>XRP Account</b> and your <b>XRPL Webhook</b> details.</p></div>', 'wc-gateway-xrp' );
+            _e( '<div class="notice notice-error"><p>Before you can use the XRP payment gateway, you <b>must</b> specify a <b>XRP Account</b> and your <b>XRPL Webhook</b> details.</p></div>', 'wc-gateway-xrp' );
         }
 
 
