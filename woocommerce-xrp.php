@@ -400,7 +400,12 @@ function wc_gateway_xrp_init() {
                 $orders[0]->update_meta_data( 'last_sequence', $tx->tx->Sequence );
 
                 /* store the tx hash */
-                $txlist = explode( ',', $orders[0]->get_meta( 'tx' ) );
+                $txlist = $orders[0]->get_meta( 'tx' );
+                if ( empty($txlist) ) {
+                    $txlist = array();
+                } else {
+                    $txlist = explode( ',', $txlist );
+                }
                 if ( ! in_array( $tx->tx->hash, $txlist ) ) {
                     array_push( $txlist, $tx->tx->hash );
                 }
