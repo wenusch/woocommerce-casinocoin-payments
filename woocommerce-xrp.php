@@ -133,7 +133,7 @@ function wc_gateway_xrp_init() {
         public function process_admin_options() {
             parent::process_admin_options();
 
-            wp_redirect($_SERVER['REQUEST_URI']);
+            wp_redirect( $_SERVER['REQUEST_URI'] );
             exit;
         }
 
@@ -374,17 +374,17 @@ function wc_gateway_xrp_init() {
             ];
 
             $curl = new Curl( $node );
-            $curl->post( json_encode($payload) );
+            $curl->post( json_encode( $payload ) );
 
-            if ($curl->info['http_code'] !== 200 || ($res = json_decode( $curl->data )) == null ) {
+            if ( $curl->info['http_code'] !== 200 || ( $res = json_decode( $curl->data ) ) == null ) {
                 echo "unable to reach the XRP ledger.";
                 exit;
             }
 
-            $rev = array_reverse($res->result->transactions);
+            $rev = array_reverse( $res->result->transactions );
 
-            foreach ($rev as $tx) {
-                if ( $tx->tx->TransactionType != 'Payment' || $tx->tx->Destination != $account || !isset($tx->tx->DestinationTag) || $tx->tx->DestinationTag == 0 ) {
+            foreach ( $rev as $tx ) {
+                if ( $tx->tx->TransactionType != 'Payment' || $tx->tx->Destination != $account || !isset( $tx->tx->DestinationTag ) || $tx->tx->DestinationTag == 0 ) {
                     continue;
                 }
                 $orders = wc_get_orders( array( 'destination_tag' => $tx->tx->DestinationTag ) );
@@ -404,7 +404,7 @@ function wc_gateway_xrp_init() {
                 if ( ! in_array( $tx->tx->hash, $txlist ) ) {
                     array_push( $txlist, $tx->tx->hash );
                 }
-                $orders[0]->update_meta_data( 'tx', implode(',', $txlist) );
+                $orders[0]->update_meta_data( 'tx', implode( ',', $txlist ) );
 
                 /* update the delivered_amount */
                 $delivered_amount = $orders[0]->get_meta( 'delivered_amount' );
@@ -414,7 +414,7 @@ function wc_gateway_xrp_init() {
 
                 $total_amount = $orders[0]->get_meta( 'total_amount' );
 
-                if ($delivered_amount >= $total_amount) {
+                if ( $delivered_amount >= $total_amount ) {
                     $orders[0]->update_status( 'processing', __( sprintf( '%s XRP received', $delivered_amount ), 'wc-gateway-xrp' ) );
                     $orders[0]->reduce_order_stock();
                 }
@@ -498,8 +498,8 @@ function thankyou_xrp_payment_info( $order_id ) {
     </table>
     <?php
 
-    if (get_post_status( $order_id ) == 'wc-pending') {
-        wp_enqueue_script( 'ajax-script', plugins_url( '/js/checkout.js', __FILE__ ), array('jquery') );
+    if (get_post_status( $order_id ) == 'wc-pending' ) {
+        wp_enqueue_script( 'ajax-script', plugins_url( '/js/checkout.js', __FILE__ ), array( 'jquery' ) );
         wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'order_id' => $order_id ) );
     }
 }
@@ -513,8 +513,8 @@ add_action( 'wp_ajax_nopriv_xrp_checkout', 'xrp_checkout_handler' );
 function xrp_checkout_handler() {
     $order = wc_get_order( $_POST['order_id'] );
 
-    if ( $order == false) {
-        header('HTTP/1.0 404 Not Found');
+    if ( $order == false ) {
+        header( 'HTTP/1.0 404 Not Found' );
         wp_die();
     }
 
