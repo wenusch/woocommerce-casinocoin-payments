@@ -330,6 +330,7 @@ function wc_gateway_xrp_init() {
             $order->add_meta_data( 'total_amount', $xrp );
             $order->add_meta_data( 'destination_tag', $tag );
             $order->add_meta_data( 'delivered_amount', '0' );
+            $order->add_meta_data( 'xrp_rate', $rate );
             $order->save_meta_data();
 
             WC()->cart->empty_cart();
