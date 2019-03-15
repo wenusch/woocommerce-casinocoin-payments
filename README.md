@@ -27,3 +27,7 @@ Please see [LICENSE](https://github.com/empatogen/woocommerce-xrp/blob/master/LI
 * A huge thank you to both [Ripple](https://ripple.com/) and [XRPL Labs](https://xrpl-labs.com/) for being awesome!
 * Thanks to [Chronos Ananké](https://twitter.com/AnankeChronos) for helping out with translation! (French)
 * Thanks to **everyone** who helped out testing! Plenty of bugs got nailed and lots of new features added.
+
+## Donate
+
+If you like this plugin and wish to donate, feel free to send some XRP drops to *rscKqdNj1ECXamMoxxwejTnBmhwTpBvTKz*.
