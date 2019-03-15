@@ -1,12 +1,12 @@
 # WooCommerce XRP
 
-A payment gateway for WooCommerce to easily accept [XRP](https://ripple.com/xrp) as a payment method.
+A payment gateway for [WooCommerce](https://woocommerce.com/) to easily accept [XRP](https://ripple.com/xrp) as a payment method.
 
 ## Requirements
 
-* PHP 7.0+ (it *might* work with PHP 5.6, but not tested)
-* WordPress 5.1+
-* WooCommerce 3.5.6+
+* [PHP](https://php.net) 7.0+ (it *might* work with PHP 5.6, but not tested)
+* [WordPress](https://wordpress.org/) 5.1+
+* [WooCommerce](https://woocommerce.com/) 3.5.6+
 * You need to have [cURL](https://curl.haxx.se) installed.
 * You need an account at [XRPL Webhook](https://webhook.xrpayments.co) (see blow)
 
