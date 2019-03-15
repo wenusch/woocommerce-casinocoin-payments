@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce XRP
  * Plugin URI: http://github.com/empatogen/woocommerce-xrp
  * Description: A payment gateway for WooCommerce to accept <a href="https://ripple.com/xrp">XRP</a> payments.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Jesper Wallin
  * Author URI: https://ifconfig.se/
  * Developer: Jesper Wallin
@@ -24,7 +24,6 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
     return;
 }
 
-include_once dirname( __FILE__ ) . '/includes/class-curl.php';
 include_once dirname( __FILE__ ) . '/includes/class-webhooks.php';
 include_once dirname( __FILE__ ) . '/includes/class-rates.php';
 
@@ -46,7 +45,7 @@ function wc_gateway_xrp_load_text_domain() {
  *
  * @class       WC_Gateway_XRP
  * @extends     WC_Payment_Gateway
- * @version     1.0.0
+ * @version     1.0.1
  * @package     WooCommerce/Classes/Payment
  * @author      Jesper Wallin
  */
@@ -78,9 +77,7 @@ function wc_gateway_xrp_init() {
                 return true;
             }
 
-            if ( ! function_exists( 'curl_init' ) ) {
-                add_action( 'admin_notices', array( $this, 'require_curl' ) );
-            } elseif ( empty( $this->settings['xrp_account'] ) || empty( $this->settings['xrpl_webhook_api_pub'] ) || empty( $this->settings['xrpl_webhook_api_priv'] ) ) {
+            if ( empty( $this->settings['xrp_account'] ) || empty( $this->settings['xrpl_webhook_api_pub'] ) || empty( $this->settings['xrpl_webhook_api_priv'] ) ) {
                  add_action( 'admin_notices', array( $this, 'require_xrp' ) );
             } elseif ( $this->check_webhooks() === false ) {
                  add_action( 'admin_notices', array( $this, 'invalid_xrp' ) );
@@ -116,14 +113,6 @@ function wc_gateway_xrp_init() {
          */
         public function invalid_xrp() {
             _e( '<div class="notice notice-error"><p>The specified <b>XRP Account</b> and/or <b>XRPL Webhook</b> details are invalid. Please correct these for the <b>XRP Payment Gateway</b> to work properly.</p></div>', 'wc-gateway-xrp' );
-        }
-
-
-        /**
-         * Display an error explaining that cURL is required.
-         */
-        public function require_curl() {
-            _e( '<div class="notice notice-error"><p>You must have <b>cURL</b> installed for the <b>XRP Payment Gateway</b> to work properly.</p></div>', 'wc-gateway-xrp' );
         }
 
 
@@ -372,7 +361,7 @@ function wc_gateway_xrp_init() {
                 $limit = 10;
             }
 
-            $payload = [
+            $payload = json_encode( [
                 'method' => 'account_tx',
                 'params' => [[
                     'account' => $account,
@@ -380,24 +369,14 @@ function wc_gateway_xrp_init() {
                     'ledger_index_max' => -1,
                     'limit' => $limit,
                 ]]
-            ];
+            ] );
 
-            $bypass = $this->get_option( 'xrp_bypass' );
-            $header = null;
-            if ( $bypass == 'yes' ) {
-                $node = sprintf( 'https://cors-anywhere.herokuapp.com/%s', $node );
-                $header = array( 'origin: ' . get_site_url() );
-            }
-
-            $curl = new Curl( $node, $header );
-            $curl->post( json_encode( $payload ) );
-
-            if ( $curl->info['http_code'] !== 200 || ( $res = json_decode( $curl->data ) ) == null ) {
+            $res = wp_remote_post( $node, array( 'body' => $payload ) );
+            if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $ledger = json_decode( $res['body'] ) ) == null ) {
                 echo "unable to reach the XRP ledger.";
                 exit;
             }
-
-            $rev = array_reverse( $res->result->transactions );
+            $rev = array_reverse( $ledger->result->transactions );
 
             foreach ( $rev as $tx ) {
                 if ( $tx->tx->TransactionType != 'Payment' || $tx->tx->Destination != $account || !isset( $tx->tx->DestinationTag ) || $tx->tx->DestinationTag == 0 ) {
