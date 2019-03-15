@@ -211,7 +211,7 @@ function wc_gateway_xrp_init() {
                 'xrp' => array(
                     'title'       => __( 'XRP Account', 'wc-gateway-xrp' ),
                     'type'        => 'title',
-                    'description' => __( 'Please specify the XRP Ledger account where your payments should be sent.', 'wc-gateway-xrp' ),
+                    'description' => __( 'Please specify the XRP Ledger account where your payments should be sent. This should be an account <b>YOU</b> own and should <b>NOT</b> be an exchange account, since a unique destination tag is generated for each order.', 'wc-gateway-xrp' ),
                 ),
 
                 'xrp_account' => array(
