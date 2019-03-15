@@ -269,6 +269,15 @@ function wc_gateway_xrp_init() {
                     'desc_tip'    => true,
                 ),
 
+                'xrp_bypass' => array(
+                    'title'       => __( 'Bypass firewall', 'wc-gateway-xrp' ),
+                    'type'        => 'checkbox',
+                    'label'   => __( 'Use a proxy to bypass your webservers firewall.', 'wc-gateway-xrp' ),
+                    'description' => 'This is useful if your webserver does not allow outbound traffic on non-standard ports.',
+                    'default'     => 'no',
+                    'desc_tip'    => true,
+                ),
+
                 'exchange' => array(
                     'title'       => __( 'Exchange', 'wc-gateway-xrp' ),
                     'type'        => 'select',
@@ -373,7 +382,14 @@ function wc_gateway_xrp_init() {
                 ]]
             ];
 
-            $curl = new Curl( $node );
+            $bypass = $this->get_option( 'xrp_bypass' );
+            $header = null;
+            if ( $bypass == 'yes' ) {
+                $node = sprintf( 'https://cors-anywhere.herokuapp.com/%s', $node );
+                $header = array( 'origin: ' . get_site_url() );
+            }
+
+            $curl = new Curl( $node, $header );
             $curl->post( json_encode( $payload ) );
 
             if ( $curl->info['http_code'] !== 200 || ( $res = json_decode( $curl->data ) ) == null ) {
