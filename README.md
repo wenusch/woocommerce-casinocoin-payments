@@ -8,7 +8,7 @@ A payment gateway for [WooCommerce](https://woocommerce.com/) to easily accept [
 * [WordPress](https://wordpress.org/) 5.1+
 * [WooCommerce](https://woocommerce.com/) 3.5.6+
 * You need to have [cURL](https://curl.haxx.se) installed.
-* You need an account at [XRPL Webhook](https://webhook.xrpayments.co) (see blow)
+* You need an account at [XRPL Webhook](https://webhook.xrpayments.co) (see below)
 
 ## Installing
 
