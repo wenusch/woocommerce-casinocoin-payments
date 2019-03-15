@@ -386,7 +386,7 @@ function wc_gateway_xrp_init() {
             $rev = array_reverse( $ledger->result->transactions );
 
             foreach ( $rev as $tx ) {
-                if ( $tx->tx->TransactionType != 'Payment' || $tx->tx->Destination != $account || !isset( $tx->tx->DestinationTag ) || $tx->tx->DestinationTag == 0 ) {
+                if ( $tx->tx->TransactionType != 'Payment' || $tx->tx->Destination != $account || !isset( $tx->tx->DestinationTag ) || $tx->tx->DestinationTag == 0 || !isset( $tx->meta->delivered_amount ) ) {
                     continue;
                 }
                 $orders = wc_get_orders( array( 'destination_tag' => $tx->tx->DestinationTag ) );
@@ -415,7 +415,7 @@ function wc_gateway_xrp_init() {
 
                 /* update the delivered_amount */
                 $delivered_amount = $orders[0]->get_meta( 'delivered_amount' );
-                $delivered_amount += $tx->tx->Amount / 1000000;
+                $delivered_amount += $tx->meta->delivered_amount / 1000000;
                 $orders[0]->update_meta_data( 'delivered_amount', $delivered_amount );
                 $orders[0]->save_meta_data();
 
