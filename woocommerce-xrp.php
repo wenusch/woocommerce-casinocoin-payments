@@ -371,7 +371,14 @@ function wc_gateway_xrp_init() {
                 ]]
             ] );
 
-            $res = wp_remote_post( $node, array( 'body' => $payload ) );
+            $bypass  = $this->get_option( 'xrp_bypass' );
+            $headers = array();
+            if ( $bypass == 'yes' ) {
+                $node = sprintf( 'https://cors-anywhere.herokuapp.com/%s', $node );
+                $headers = array( 'origin' => get_site_url() );
+            }
+
+            $res = wp_remote_post( $node, array( 'body' => $payload, 'headers' => $headers ) );
             if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $ledger = json_decode( $res['body'] ) ) == null ) {
                 echo "unable to reach the XRP ledger.";
                 exit;
