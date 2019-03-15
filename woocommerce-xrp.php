@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce XRP
  * Plugin URI: http://github.com/empatogen/woocommerce-xrp
- * Description: Your extension's description text.
+ * Description: A payment gateway for WooCommerce to accept <a href="https://ripple.com/xrp">XRP</a> payments.
  * Version: 1.0.0
  * Author: Jesper Wallin
  * Author URI: https://ifconfig.se/
