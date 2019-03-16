@@ -2,14 +2,6 @@
 
 A payment gateway for [WooCommerce](https://woocommerce.com/) to easily accept [XRP](https://ripple.com/xrp) as a payment method.
 
-## Requirements
-
-* [PHP](https://php.net) 7.0+ (it *might* work with PHP 5.6, but not tested)
-* [WordPress](https://wordpress.org/) 5.1+
-* [WooCommerce](https://woocommerce.com/) 3.5.6+
-* A "self-owned" [XRP](https://ripple.com/xrp) account. (You may **not** use an Exchange!)
-* You need an account at [XRPL Webhook](https://webhook.xrpayments.co) (see below)
-
 ## Changelog
 
 A brief description of what each release brings. If you need more details, check the commit log.
@@ -17,6 +9,16 @@ A brief description of what each release brings. If you need more details, check
 * **v1.0.2** - Security update to add mitigations for [the partial payments exploit](https://developers.ripple.com/partial-payments.html#partial-payments-exploit).
 * **v1.0.1** - Removed the cURL dependency and use wp_remote_get() and wp_remote_post() instead.
 * **v1.0.0** - Initial release!
+
+Please keep an extra eye on this repo or [follow me on Twitter](https://twitter.com/empatogen) to get notified about updates and issues.
+
+## Requirements
+
+* [PHP](https://php.net) 7.0+ (it *might* work with PHP 5.6, but not tested)
+* [WordPress](https://wordpress.org/) 5.1+
+* [WooCommerce](https://woocommerce.com/) 3.5.6+
+* A "self-owned" [XRP](https://ripple.com/xrp) account. (You may **not** use an Exchange!)
+* You need an account at [XRPL Webhook](https://webhook.xrpayments.co) (see below)
 
 ## Installing
 
