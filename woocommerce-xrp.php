@@ -467,6 +467,9 @@ function handle_destination_tag_query( $query, $query_vars ) {
 add_action( 'woocommerce_thankyou', 'thankyou_xrp_payment_info', 10 );
 add_action( 'woocommerce_view_order', 'thankyou_xrp_payment_info', 10 );
 function thankyou_xrp_payment_info( $order_id ) {
+    if ( get_post_meta( $order_id, '_payment_method', true ) !== 'xrp' ) {
+        return false;
+    }
     $gateway = new WC_Gateway_XRP;
     $remaining = round( (float)get_post_meta( $order_id, 'total_amount', true ) - (float)get_post_meta( $order_id, 'delivered_amount', true ) , 6 );
  ?>
