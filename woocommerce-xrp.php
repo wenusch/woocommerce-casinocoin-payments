@@ -256,6 +256,7 @@ function wc_gateway_xrp_init() {
                     'type'        => 'text',
                     'description' => __( 'Which XRP node to use when checking our balance.', 'wc-gateway-xrp' ),
                     'default'     => 'https://s2.ripple.com:51234',
+                    'placeholder' => 'https://s2.ripple.com:51234',
                     'desc_tip'    => true,
                 ),
 
