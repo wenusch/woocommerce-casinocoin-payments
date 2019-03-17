@@ -42,7 +42,6 @@ class Rates {
             return false;
         }
         fclose( $fh );
-
         touch( $cache );
 
         return $data;
@@ -61,7 +60,6 @@ class Rates {
         if ( ( $fh = fopen( $cache, 'r' ) ) === false ) {
             return false;
         }
-
         $data = fread( $fh, filesize( $cache ) );
         fclose( $fh );
 
@@ -126,6 +124,9 @@ class Rates {
                 break;
             case 'bitmex':
                 $rate = $this->bitmex();
+                break;
+            case 'bxinth':
+                $rate = $this->bxinth();
                 break;
             case 'kraken':
                 $rate = $this->kraken();
@@ -230,5 +231,23 @@ class Rates {
         }
 
         return $this->to_base( $rate->price, 'USD' );
+    }
+
+
+    private function bxinth() {
+        $res = wp_remote_get( 'https://bx.in.th/api/' );
+        if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
+            return false;
+        }
+
+        /* ugly? */
+        foreach ( $rate as $r ) {
+            if ( $r->primary_currency === 'THB' && $r->secondary_currency === 'XRP' ) {
+                $rate = $r->last_price;
+                break;
+            }
+        }
+
+        return $this->to_base( $rate, 'THB' );
     }
 }
