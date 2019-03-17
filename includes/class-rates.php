@@ -110,20 +110,23 @@ class Rates {
 
     public function get_rate( $exchange ) {
         switch ($exchange) {
-            case 'bitstamp':
-                $rate = $this->bitstamp();
-                break;
             case 'binance':
                 $rate = $this->binance();
                 break;
             case 'bitfinex':
                 $rate = $this->bitfinex();
                 break;
-            case 'bittrex':
-                $rate = $this->bittrex();
+            case 'bitlish':
+                $rate = $this->bitlish();
                 break;
             case 'bitmex':
                 $rate = $this->bitmex();
+                break;
+            case 'bitstamp':
+                $rate = $this->bitstamp();
+                break;
+            case 'bittrex':
+                $rate = $this->bittrex();
                 break;
             case 'bxinth':
                 $rate = $this->bxinth();
@@ -250,4 +253,23 @@ class Rates {
 
         return $this->to_base( $rate, 'THB' );
     }
+
+
+    private function bitlish() {
+        $res = wp_remote_get( 'https://bitlish.com/api/v1/tickers' );
+        if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
+            return false;
+        }
+
+        if ( $this->base_currency === 'GBP' ) {
+            $rate = $rate->xrpgbp->last;
+            $src = 'GBP';
+        } else {
+            $rate = $rate->xrpeur->last;
+            $src = 'EUR';
+        }
+
+        return $this->to_base( $rate, $src );
+    }
+
 }
