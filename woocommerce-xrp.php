@@ -83,7 +83,8 @@ function wc_gateway_xrp_init() {
                  add_action( 'admin_notices', array( $this, 'invalid_xrp' ) );
             }
 
-            if ( ! in_array( get_woocommerce_currency(), array( 'EUR', 'USD' ) ) ) {
+            $rates = new Rates( get_woocommerce_currency() );
+            if ( $rates->supported() === false ) {
                 add_action( 'admin_notices', array( $this, 'supported_currencies' ) );
             }
 
@@ -96,7 +97,7 @@ function wc_gateway_xrp_init() {
          * Display an error that the current currency is unsupported.
          */
         public function supported_currencies() {
-            _e( '<div class="notice notice-error"><p>Your current currency is not supported yet. Please use <b>USD</b> or <b>EUR</b> with for now.</p></div>', 'wc-gateway-xrp' );
+            _e( '<div class="notice notice-error"><p>The <b>XRP payment gateway<b> does not support the <b>currency</b> your shop is using!</p></div>', 'wc-gateway-xrp' );
         }
 
 
@@ -308,7 +309,7 @@ function wc_gateway_xrp_init() {
                 return false;
             }
 
-            /* calculate the amount in XRP. */
+            /* round to our advantage with 6 decimals */
             $xrp = round( ceil( ( $order->get_total() / $rate ) * 1000000 ) / 1000000, 6);
 
             /* try to get the destination tag as random as possible. */
