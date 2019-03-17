@@ -275,8 +275,9 @@ function wc_gateway_xrp_init() {
                     'options'     => array(
                         'binance'  => 'Binance',
                         'bitfinex' => 'Bitfinex',
+                        'bitlish'  => 'Bitlish',
                         'bitmex'   => 'BitMEX',
-                        'bitstamp' => 'Bitstamp Ltd',
+                        'bitstamp' => 'Bitstamp',
                         'bittrex'  => 'Bittrex',
                         'bxinth'   => 'Bitcoin Exchange Thailand',
                         'kraken'   => 'Kraken',
