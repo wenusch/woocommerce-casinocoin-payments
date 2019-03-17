@@ -88,7 +88,6 @@ function wc_gateway_xrp_init() {
                 add_action( 'admin_notices', array( $this, 'supported_currencies' ) );
             }
 
-
             $this->init_form_fields();
         }
 
@@ -198,7 +197,7 @@ function wc_gateway_xrp_init() {
                     'type'        => 'text',
                     'description' => __( 'This controls the title for the payment method the customer sees during checkout.', 'wc-gateway-xrp' ),
                     'default'     => __( 'XRP', 'wc-gateway-xrp' ),
-                    'desc_tip'    => true,
+                    'desc_tip'    => true
                 ),
 
                 'description' => array(
@@ -206,13 +205,13 @@ function wc_gateway_xrp_init() {
                     'type'        => 'textarea',
                     'description' => __( 'Payment method description that the customer will see on your checkout.', 'wc-gateway-xrp' ),
                     'default'     => __( 'Payment instruction will be shown once you\'ve placed your order.', 'wc-gateway-xrp' ),
-                    'desc_tip'    => true,
+                    'desc_tip'    => true
                 ),
 
                 'xrp' => array(
                     'title'       => __( 'XRP Account', 'wc-gateway-xrp' ),
                     'type'        => 'title',
-                    'description' => __( 'Please specify the XRP Ledger account where your payments should be sent. This should be an account <b>YOU</b> own and should <b>NOT</b> be an exchange account, since a unique destination tag is generated for each order.', 'wc-gateway-xrp' ),
+                    'description' => __( 'Please specify the XRP Ledger account where your payments should be sent. This should be an account <b>YOU</b> own and should <b>NOT</b> be an exchange account, since a unique destination tag is generated for each order.', 'wc-gateway-xrp' )
                 ),
 
                 'xrp_account' => array(
@@ -220,13 +219,13 @@ function wc_gateway_xrp_init() {
                     'type'        => 'text',
                     'description' => __( 'Your XRP account where payments should be sent.', 'wc-gateway-xrp' ),
                     'default'     => '',
-                    'desc_tip'    => true,
+                    'desc_tip'    => true
                 ),
 
                 'xrpl_webhook' => array(
                     'title'       => __( 'XRPL Webhook options', 'wc-gateway-xrp' ),
                     'type'        => 'title',
-                    'description' => __( 'In order to create your webhook and process your payments properly, please specify your XRPL Webhooks API key. For more informations how to obtain these keys, please visit <a href="https://webhook.xrpayments.co/">https://webhook.xrpayments.co</a>.', 'wc-gateway-xrp' ),
+                    'description' => __( 'In order to create your webhook and process your payments properly, please specify your XRPL Webhooks API key. For more informations how to obtain these keys, please visit <a href="https://webhook.xrpayments.co/">https://webhook.xrpayments.co</a>.', 'wc-gateway-xrp' )
                 ),
 
                 'xrpl_webhook_api_pub' => array(
@@ -234,7 +233,7 @@ function wc_gateway_xrp_init() {
                     'type'        => 'text',
                     'description' => __( 'Your XRPL XRPayments Webhook API key.', 'wc-gateway-xrp' ),
                     'default'     => '',
-                    'desc_tip'    => true,
+                    'desc_tip'    => true
                 ),
 
                 'xrpl_webhook_api_priv' => array(
@@ -242,13 +241,13 @@ function wc_gateway_xrp_init() {
                     'type'        => 'text',
                     'description' => __( 'Your XRPL XRPayments Webhook API secret.', 'wc-gateway-xrp' ),
                     'default'     => '',
-                    'desc_tip'    => true,
+                    'desc_tip'    => true
                 ),
 
                 'advanced' => array(
                     'title'       => __( 'Advanced', 'wc-gateway-xrp' ),
                     'type'        => 'title',
-                    'description' => __( 'Leave these untouched unless you really know what you\'re doing.', 'wc-gateway-xrp' ),
+                    'description' => __( 'Leave these untouched unless you really know what you\'re doing.', 'wc-gateway-xrp' )
                 ),
 
                 'xrp_node' => array(
@@ -257,7 +256,7 @@ function wc_gateway_xrp_init() {
                     'description' => __( 'Which XRP node to use when checking our balance.', 'wc-gateway-xrp' ),
                     'default'     => 'https://s2.ripple.com:51234',
                     'placeholder' => 'https://s2.ripple.com:51234',
-                    'desc_tip'    => true,
+                    'desc_tip'    => true
                 ),
 
                 'xrp_bypass' => array(
@@ -266,7 +265,7 @@ function wc_gateway_xrp_init() {
                     'label'   => __( 'Use a proxy to bypass your webservers firewall.', 'wc-gateway-xrp' ),
                     'description' => 'This is useful if your webserver does not allow outbound traffic on non-standard ports.',
                     'default'     => 'no',
-                    'desc_tip'    => true,
+                    'desc_tip'    => true
                 ),
 
                 'exchange' => array(
@@ -284,7 +283,7 @@ function wc_gateway_xrp_init() {
                         'kraken'   => 'Kraken',
                     ),
                     'default'     => 'bitstamp',
-                    'desc_tip'    => true,
+                    'desc_tip'    => true
                 ),
 
                 'tx_limit' => array(
@@ -292,7 +291,7 @@ function wc_gateway_xrp_init() {
                     'type'        => 'number',
                     'description' => __( 'The number of transactions to fetch from the ledger each time we check for new payments.', 'wc-gateway-xrp' ),
                     'default'     => 10,
-                    'desc_tip'    => true,
+                    'desc_tip'    => true
                 ),
             ) );
         }
