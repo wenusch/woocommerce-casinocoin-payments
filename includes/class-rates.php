@@ -18,7 +18,7 @@ class Rates {
     }
 
 
-    public function get_ecb_rates() {
+    private function get_ecb_rates() {
         if ( ( $data = $this->get_ecb_cache() ) === false ) {
             $res = wp_remote_get( 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml' );
             if ( is_wp_error( $res ) || $res['response']['code'] !== 200 ) {
