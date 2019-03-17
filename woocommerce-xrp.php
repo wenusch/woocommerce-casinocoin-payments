@@ -96,7 +96,7 @@ function wc_gateway_xrp_init() {
          * Display an error that the current currency is unsupported.
          */
         public function supported_currencies() {
-            _e( '<div class="notice notice-error"><p>The <b>XRP payment gateway<b> does not support the <b>currency</b> your shop is using!</p></div>', 'wc-gateway-xrp' );
+            _e( '<div class="notice notice-error"><p><b>WooCommerce XRP</b> does not support the <b>currency</b> your shop is using.</p></div>', 'wc-gateway-xrp' );
         }
 
 
@@ -104,7 +104,7 @@ function wc_gateway_xrp_init() {
          * Display an error that all XRP related data is required.
          */
         public function require_xrp() {
-            _e( '<div class="notice notice-error"><p>Before you can use the XRP payment gateway, you <b>must</b> specify a <b>XRP Account</b> and your <b>XRPL Webhook</b> details.</p></div>', 'wc-gateway-xrp' );
+            _e( '<div class="notice notice-error"><p><b>WooCommerce XRP</b> requires you to specify a <b>XRP Account</b> and your <b>XRPL Webhook</b> details.</p></div>', 'wc-gateway-xrp' );
         }
 
 
@@ -112,7 +112,7 @@ function wc_gateway_xrp_init() {
          * Display an error that the XRP details is invalid.
          */
         public function invalid_xrp() {
-            _e( '<div class="notice notice-error"><p>The specified <b>XRP Account</b> and/or <b>XRPL Webhook</b> details are invalid. Please correct these for the <b>XRP Payment Gateway</b> to work properly.</p></div>', 'wc-gateway-xrp' );
+            _e( '<div class="notice notice-error"><p>The specified <b>XRP Account</b> and/or <b>XRPL Webhook</b> details are invalid. Please correct these for <b>WooCommerce XRP</b> to work properly.</p></div>', 'wc-gateway-xrp' );
         }
 
 
