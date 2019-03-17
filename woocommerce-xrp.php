@@ -390,9 +390,26 @@ function wc_gateway_xrp_init() {
             $rev = array_reverse( $ledger->result->transactions );
 
             foreach ( $rev as $tx ) {
-                if ( $tx->tx->TransactionType != 'Payment' || $tx->tx->Destination != $account || !isset( $tx->tx->DestinationTag ) || $tx->tx->DestinationTag == 0 || !isset( $tx->meta->delivered_amount ) ) {
+                /* only care for payment transactions */
+                if ( $tx->tx->TransactionType != 'Payment' ) {
                     continue;
                 }
+
+                /* only care for inbound transactions */
+                if ( $tx->tx->Destination != $account ) {
+                    continue;
+                }
+
+                /* only care for transactions with a sane destination tag set */
+                if ( !isset( $tx->tx->DestinationTag ) || $tx->tx->DestinationTag == 0 ) {
+                    continue;
+                }
+
+                /* make sure the delivered_amount meta field is set */
+                if ( !isset( $tx->meta->delivered_amount ) ) {
+                    continue;
+                }
+
                 $orders = wc_get_orders( array( 'destination_tag' => $tx->tx->DestinationTag ) );
                 if ( empty( $orders ) ) {
                     continue;
