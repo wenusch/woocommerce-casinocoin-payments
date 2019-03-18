@@ -81,6 +81,9 @@ function wc_gateway_xrp_init() {
                 'kraken'   => 'Kraken'
             ];
 
+            //sort the exchanges alphabetically
+            $this->exchanges = asort($this->exchanges);
+
             $this->title                 = $this->settings['title'];
             $this->description           = $this->settings['description'];
             $this->xrp_account           = $this->settings['xrp_account'];
