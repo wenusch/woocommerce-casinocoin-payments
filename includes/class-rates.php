@@ -163,6 +163,9 @@ class Rates {
             case 'kraken':
                 $rate = $this->kraken();
                 break;
+            case 'bitbank':
+                $rate = $this->bitbank();
+                break;
         }
 
         # in case the exchange is unreachable, try a different one.
@@ -325,4 +328,16 @@ class Rates {
         return $this->to_base( $rate, $src );
     }
 
+    /**
+     * Get Exchange rate from bitbank
+     * @return bool|float|int
+     */
+    private function bitbank() {
+        $res = wp_remote_get( 'https://public.bitbank.cc/xrp_jpy/ticker' );
+        if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
+            return false;
+        }
+
+        return $this->to_base( $rate->data->last, 'JPY' );
+    }
 }
