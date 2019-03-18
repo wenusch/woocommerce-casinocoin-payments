@@ -142,6 +142,9 @@ class Rates {
             case 'binance':
                 $rate = $this->binance();
                 break;
+            case 'bitbank':
+                $rate = $this->bitbank();
+                break;
             case 'bitfinex':
                 $rate = $this->bitfinex();
                 break;
@@ -162,9 +165,6 @@ class Rates {
                 break;
             case 'kraken':
                 $rate = $this->kraken();
-                break;
-            case 'bitbank':
-                $rate = $this->bitbank();
                 break;
         }
 
