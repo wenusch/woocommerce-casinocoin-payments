@@ -279,13 +279,14 @@ function wc_gateway_xrp_init() {
                     'description' => __( 'Which exchange to use when fetching the XRP rate.', 'wc-gateway-xrp' ),
                     'options'     => array(
                         'binance'  => 'Binance',
+                        'bitbank'  => 'Bitbank',
                         'bitfinex' => 'Bitfinex',
                         'bitlish'  => 'Bitlish',
                         'bitmex'   => 'BitMEX',
                         'bitstamp' => 'Bitstamp',
                         'bittrex'  => 'Bittrex',
                         'bxinth'   => 'Bitcoin Exchange Thailand',
-                        'kraken'   => 'Kraken',
+                        'kraken'   => 'Kraken'
                     ),
                     'default'     => 'bitstamp',
                     'desc_tip'    => true
