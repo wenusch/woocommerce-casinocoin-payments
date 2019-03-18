@@ -56,6 +56,7 @@ function wc_gateway_xrp_init() {
     class WC_Gateway_XRP extends WC_Payment_Gateway {
 
         public $helpers;
+        protected $exchanges;
 
         public function __construct() {
             $this->id                    = 'xrp';
@@ -66,6 +67,19 @@ function wc_gateway_xrp_init() {
             $this->init_settings();
 
             $this->helpers = new Helpers();
+
+            // supported exchanges
+            $this->exchanges = [
+                'binance'  => 'Binance',
+                'bitbank'  => 'Bitbank',
+                'bitfinex' => 'Bitfinex',
+                'bitlish'  => 'Bitlish',
+                'bitmex'   => 'BitMEX',
+                'bitstamp' => 'Bitstamp',
+                'bittrex'  => 'Bittrex',
+                'bxinth'   => 'Bitcoin Exchange Thailand',
+                'kraken'   => 'Kraken'
+            ];
 
             $this->title                 = $this->settings['title'];
             $this->description           = $this->settings['description'];
@@ -277,17 +291,7 @@ function wc_gateway_xrp_init() {
                     'title'       => __( 'Exchange', 'wc-gateway-xrp' ),
                     'type'        => 'select',
                     'description' => __( 'Which exchange to use when fetching the XRP rate.', 'wc-gateway-xrp' ),
-                    'options'     => array(
-                        'binance'  => 'Binance',
-                        'bitbank'  => 'Bitbank',
-                        'bitfinex' => 'Bitfinex',
-                        'bitlish'  => 'Bitlish',
-                        'bitmex'   => 'BitMEX',
-                        'bitstamp' => 'Bitstamp',
-                        'bittrex'  => 'Bittrex',
-                        'bxinth'   => 'Bitcoin Exchange Thailand',
-                        'kraken'   => 'Kraken'
-                    ),
+                    'options'     => $this->exchanges,
                     'default'     => 'bitstamp',
                     'desc_tip'    => true
                 ),
