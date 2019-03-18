@@ -55,7 +55,7 @@ function wc_gateway_xrp_init() {
 
     class WC_Gateway_XRP extends WC_Payment_Gateway {
 
-        private $helpers;
+        public $helpers;
 
         public function __construct() {
             $this->id                    = 'xrp';
@@ -508,7 +508,7 @@ function thankyou_xrp_payment_info( $order_id ) {
     <h2><?php _e( 'XRP payment details', 'wc-gateway-xrp' ); ?></h2>
     <div class="xrp_qr_container">
         <?php if ( get_post_status( $order_id ) == 'wc-pending' ) { ?>
-        <img id="xrp_qr" src="<?php echo $this->helpers()->xrp_qr( $gateway->settings['xrp_account'], get_post_meta( $order_id, 'destination_tag', true ), $remaining ) ?>">
+        <img id="xrp_qr" src="<?php echo $gateway->helpers->xrp_qr( $gateway->settings['xrp_account'], get_post_meta( $order_id, 'destination_tag', true ), $remaining ) ?>">
         <?php } ?>
     </div>
     <table class="woocommerce-table shop_table xrp_info">
@@ -535,7 +535,7 @@ function thankyou_xrp_payment_info( $order_id ) {
             </tr>
             <tr>
                 <th><?php _e( 'Order status', 'wc-gateway-xrp' ); ?></th>
-                <td id="xrp_status"><?php echo $this->helpers()->wc_pretty_status( get_post_status( $order_id ) ) ?></td>
+                <td id="xrp_status"><?php echo $gateway->helpers->wc_pretty_status( get_post_status( $order_id ) ) ?></td>
             </tr>
         </tbody>
     </table>
@@ -574,8 +574,8 @@ function xrp_checkout_handler() {
         'xrp_total'     => $xrp_total,
         'xrp_received'  => $xrp_received,
         'xrp_remaining' => $remaining,
-        'status'        => $this->helpers()->wc_pretty_status( $status ),
-        'qr'            => $this->helpers()->xrp_qr( $gateway->settings['xrp_account'], $tag, $remaining ),
+        'status'        => $gateway->helpers->wc_pretty_status( $status ),
+        'qr'            => $gateway->helpers->xrp_qr( $gateway->settings['xrp_account'], $tag, $remaining ),
         'raw_status'    => $status
     );
 
