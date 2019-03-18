@@ -3,12 +3,18 @@
 class Rates {
     private $ecb_cache = 'woo_ecb_rates.xml';
 
-
+    /**
+     * Rates constructor.
+     * @param $base_currency
+     */
     public function __construct( $base_currency ) {
         $this->base_currency = strtoupper($base_currency);
     }
 
-
+    /**
+     * Supported currencies
+     * @return bool
+     */
     public function supported() {
         return in_array( $this->base_currency, [
             'USD','JPY','BGN','CZK','DKK','GBP','HUF','PLN','RON','SEK','CHF',
@@ -18,6 +24,10 @@ class Rates {
     }
 
 
+    /**
+     * Get rated from the European Central Bank
+     * @return bool|string
+     */
     private function get_ecb_rates() {
         if ( ( $data = $this->get_ecb_cache() ) === false ) {
             $res = wp_remote_get( 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml' );
@@ -32,7 +42,11 @@ class Rates {
         return $data;
     }
 
-
+    /**
+     * Caching of ECB rates
+     * @param $data
+     * @return bool
+     */
     private function set_ecb_cache( $data ) {
         $cache = get_temp_dir() . $this->ecb_cache;
         if ( ( $fh = fopen( $cache, 'w+' ) ) === false ) {
@@ -47,7 +61,10 @@ class Rates {
         return $data;
     }
 
-
+    /**
+     * Get cached data
+     * @return bool|string
+     */
     private function get_ecb_cache() {
         $cache = get_temp_dir() . $this->ecb_cache;
         if ( !file_exists( $cache ) || !is_readable( $cache ) ) {
@@ -67,6 +84,10 @@ class Rates {
     }
 
 
+    /**
+     * @param $currency
+     * @return bool
+     */
     public function eur( $currency ) {
         if ( ( $data = $this->get_ecb_rates() ) === false ) {
             return false;
@@ -82,7 +103,11 @@ class Rates {
         return $match[1];
     }
 
-
+    /**
+     * @param $rate
+     * @param $src
+     * @return bool|float|int
+     */
     private function to_base( $rate, $src ) {
         if ( empty($rate) || empty($src) ) {
             return false;
@@ -107,7 +132,11 @@ class Rates {
         return ($rate / $usd) * $eur;
     }
 
-
+    /**
+     * Get XRP exchange rate
+     * @param $exchange
+     * @return bool|float|int
+     */
     public function get_rate( $exchange ) {
         switch ($exchange) {
             case 'binance':
@@ -150,7 +179,10 @@ class Rates {
         return $rate;
     }
 
-
+    /**
+     * Get Exchange rate from bitstamp
+     * @return bool|float|int
+     */
     private function bitstamp() {
         if ( $this->base_currency === 'USD' ) {
             $url = 'https://www.bitstamp.net/api/v2/ticker/xrpusd/';
@@ -167,7 +199,10 @@ class Rates {
         return $this->to_base( $rate->last, $src );
     }
 
-
+    /**
+     * Get Exchange rate from kraken
+     * @return bool|float|int
+     */
     private function kraken() {
         if ( $this->base_currency === 'USD' ) {
             $url = 'https://api.kraken.com/0/public/Ticker?pair=XRPUSD';
@@ -190,7 +225,10 @@ class Rates {
         return $this->to_base( $rate, $src );
     }
 
-
+    /**
+     * Get Exchange rate from bitfinex
+     * @return bool|float|int
+     */
     private function bitfinex() {
         $res = wp_remote_get( 'https://api.bitfinex.com/v1/pubticker/xrpusd' );
         if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
@@ -200,7 +238,10 @@ class Rates {
         return $this->to_base( $rate->last_price, 'USD' );
     }
 
-
+    /**
+     * Get Exchange rate from bittrex
+     * @return bool|float|int
+     */
     private function bittrex() {
         $res = wp_remote_get( 'https://api.bittrex.com/api/v1.1/public/getticker?market=USD-XRP' );
         if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
@@ -210,7 +251,10 @@ class Rates {
         return $this->to_base( $rate->result->Last, 'USD' );
     }
 
-
+    /**
+     * Get Exchange rate from bitmex
+     * @return bool|float|int
+     */
     private function bitmex() {
         $res = wp_remote_get( 'https://www.bitmex.com/api/v1/orderBook/L2?symbol=xbt&depth=1' );
         if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
@@ -226,7 +270,10 @@ class Rates {
         return $this->to_base( ( $btc * $rate[0]->price ), 'USD' );
     }
 
-
+    /**
+     * Get Exchange rate from binance
+     * @return bool|float|int
+     */
     private function binance() {
         $res = wp_remote_get( 'https://api.binance.com/api/v3/ticker/price?symbol=XRPUSDT' );
         if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
@@ -236,7 +283,10 @@ class Rates {
         return $this->to_base( $rate->price, 'USD' );
     }
 
-
+    /**
+     * Get Exchange rate from bx.in
+     * @return bool|float|int
+     */
     private function bxinth() {
         $res = wp_remote_get( 'https://bx.in.th/api/' );
         if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
@@ -254,7 +304,10 @@ class Rates {
         return $this->to_base( $rate, 'THB' );
     }
 
-
+    /**
+     * Get Exchange rate from bitlish
+     * @return bool|float|int
+     */
     private function bitlish() {
         $res = wp_remote_get( 'https://bitlish.com/api/v1/tickers' );
         if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
