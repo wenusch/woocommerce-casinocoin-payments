@@ -26,6 +26,7 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
 
 include_once dirname( __FILE__ ) . '/includes/class-webhooks.php';
 include_once dirname( __FILE__ ) . '/includes/class-rates.php';
+include_once dirname( __FILE__ ) . '/includes/class-helpers.php';
 
 
 /**
@@ -54,13 +55,17 @@ function wc_gateway_xrp_init() {
 
     class WC_Gateway_XRP extends WC_Payment_Gateway {
 
-        public function __construct() {
+        private $helpers;
+
+        public function __construct(Helpers $helpers) {
             $this->id                    = 'xrp';
             $this->has_fields            = false;
             $this->method_title          = __( 'XRP', 'wc-gateway-xrp' );
             $this->method_description    = __( 'Let your customers pay using the XRP Ledger.', 'wc-gateway-xrp' );
 
             $this->init_settings();
+
+            $this->helpers = $helpers;
 
             $this->title                 = $this->settings['title'];
             $this->description           = $this->settings['description'];
@@ -496,7 +501,7 @@ function thankyou_xrp_payment_info( $order_id ) {
     <h2><?php _e( 'XRP payment details', 'wc-gateway-xrp' ); ?></h2>
     <div class="xrp_qr_container">
         <?php if ( get_post_status( $order_id ) == 'wc-pending' ) { ?>
-        <img id="xrp_qr" src="<?php echo xrp_qr( $gateway->settings['xrp_account'], get_post_meta( $order_id, 'destination_tag', true ), $remaining ) ?>">
+        <img id="xrp_qr" src="<?php echo $this->helpers->xrp_qr( $gateway->settings['xrp_account'], get_post_meta( $order_id, 'destination_tag', true ), $remaining ) ?>">
         <?php } ?>
     </div>
     <table class="woocommerce-table shop_table xrp_info">
@@ -523,7 +528,7 @@ function thankyou_xrp_payment_info( $order_id ) {
             </tr>
             <tr>
                 <th><?php _e( 'Order status', 'wc-gateway-xrp' ); ?></th>
-                <td id="xrp_status"><?php echo wc_pretty_status( get_post_status( $order_id ) ) ?></td>
+                <td id="xrp_status"><?php echo $this->helpers->wc_pretty_status( get_post_status( $order_id ) ) ?></td>
             </tr>
         </tbody>
     </table>
@@ -562,8 +567,8 @@ function xrp_checkout_handler() {
         'xrp_total'     => $xrp_total,
         'xrp_received'  => $xrp_received,
         'xrp_remaining' => $remaining,
-        'status'        => wc_pretty_status( $status ),
-        'qr'            => xrp_qr( $gateway->settings['xrp_account'], $tag, $remaining ),
+        'status'        => $this->helpers->wc_pretty_status( $status ),
+        'qr'            => $this->helpers->xrp_qr( $gateway->settings['xrp_account'], $tag, $remaining ),
         'raw_status'    => $status
     );
 
@@ -572,43 +577,3 @@ function xrp_checkout_handler() {
 }
 
 
-/**
- * Generate a QR-code for the XRP payment.
- */
-function xrp_qr( $account, $tag, $amount ) {
-    $data = sprintf(
-        'https://ripple.com/send?to=%s&dt=%s&amount=%s',
-        $account,
-        $tag,
-        $amount
-    );
-    return sprintf(
-        'https://chart.googleapis.com/chart?chs=256x256&cht=qr&chld=M|0&chl=%s&choe=UTF-8',
-        urlencode( $data )
-    );
-}
-
-
-/**
- * Ugly helper to print pretty statuses.
- */
-function wc_pretty_status( $status ) {
-    switch ( $status ) {
-        case 'wc-pending':
-            return 'Pending payment';
-        case 'wc-processing':
-            return 'Processing (Paid)';
-        case 'wc-on-hold':
-            return 'On hold';
-        case 'wc-completed':
-            return 'Completed';
-        case 'wc-cancelled':
-            return 'Cancelled';
-        case 'wc-refunded':
-            return 'Refunded';
-        case 'wc-failed':
-            return 'Failed';
-        default:
-            return 'Unknown';
-    }
-}
