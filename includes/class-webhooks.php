@@ -7,13 +7,19 @@ class Webhook {
     public $base = 'https://webhook.xrpayments.co/api/v1/';
     public $error = null;
 
-
+    /**
+     * Webhook constructor.
+     * @param $pub
+     * @param $secret
+     */
     public function __construct( $pub, $secret ) {
         $this->pub = $pub;
         $this->secret = $secret;
     }
 
-
+    /**
+     * @return bool
+     */
     public function subscriptions() {
         if ( empty( $this->pub ) || empty( $this->secret ) ) {
             return false;
@@ -31,7 +37,10 @@ class Webhook {
         return $data->subscriptions;
     }
 
-
+    /**
+     * @param $address
+     * @return bool
+     */
     public function add_subscription( $address ) {
         if ( empty( $address ) || empty( $this->pub ) || empty( $this->secret ) ) {
             return false;
@@ -55,7 +64,9 @@ class Webhook {
         return $data->subscription_id;
     }
 
-
+    /**
+     * @return bool
+     */
     public function webhooks() {
         if ( empty( $this->pub ) || empty( $this->secret ) ) {
             return false;
@@ -72,7 +83,10 @@ class Webhook {
         return $data->webhooks;
     }
 
-
+    /**
+     * @param $url
+     * @return bool
+     */
     public function add_webhook( $url ) {
         if ( empty( $url ) || empty( $this->pub ) || empty( $this->secret ) ) {
             return false;
