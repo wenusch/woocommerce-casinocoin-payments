@@ -27,6 +27,7 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
 include_once dirname( __FILE__ ) . '/includes/class-webhooks.php';
 include_once dirname( __FILE__ ) . '/includes/class-rates.php';
 include_once dirname( __FILE__ ) . '/includes/class-helpers.php';
+include_once dirname( __FILE__ ) . '/includes/class-ledger.php';
 
 
 /**
@@ -164,11 +165,23 @@ function wc_gateway_xrp_init() {
             }
             $exists = false;
             foreach ( $subs as $sub ) {
-                if ( $sub->address == $this->settings['xrp_account'] ) {
-                    return true;
+                if ( $sub->address === $this->settings['xrp_account'] ) {
+                    $exists = true;
+                    break;
                 }
             }
             if ($exists === false && $wh->add_subscription( $this->settings['xrp_account'] ) === false ) {
+                return false;
+            }
+
+            /* make sure the xrp is activated */
+            $ledger = new Ledger(
+                $this->settings['xrp_node'],
+                $this->settings['xrp_bypass']
+            );
+            $trans = $ledger->account_info( $this->settings['xrp_account'] );
+
+            if ( $trans->status === 'error' ) {
                 return false;
             }
 
@@ -362,54 +375,27 @@ function wc_gateway_xrp_init() {
          * Parse the most recent transactions and match them against our orders.
          */
         public function check_ledger() {
-            $node = $this->get_option( 'xrp_node' );
-            if ( empty( $node ) ) {
-                $node = 'https://s2.ripple.com:51234';
-            }
-
-            $account = $this->get_option( 'xrp_account' );
-            if ( empty( $account ) ) {
-                echo "no account specified";
-                exit;
-            }
-
-            $limit = (int)$this->get_option( 'tx_limit' );
-            if ( $limit === 0 ) {
-                $limit = 10;
-            }
-
-            $payload = json_encode( [
-                'method' => 'account_tx',
-                'params' => [[
-                    'account' => $account,
-                    'ledger_index_min' => -1,
-                    'ledger_index_max' => -1,
-                    'limit' => $limit,
-                ]]
-            ] );
-
-            $bypass  = $this->get_option( 'xrp_bypass' );
-            $headers = array();
-            if ( $bypass == 'yes' ) {
-                $node = sprintf( 'https://cors-anywhere.herokuapp.com/%s', $node );
-                $headers = array( 'origin' => get_site_url() );
-            }
-
-            $res = wp_remote_post( $node, array( 'body' => $payload, 'headers' => $headers ) );
-            if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $ledger = json_decode( $res['body'] ) ) == null ) {
+            $ledger = new Ledger(
+                $this->settings['xrp_node'],
+                $this->settings['xrp_bypass']
+            );
+            $trans = $ledger->account_tx(
+                $this->settings['xrp_account'],
+                (int)$this->settings['tx_limit']
+            );
+            if ( $trans === false ) {
                 echo "unable to reach the XRP ledger.";
                 exit;
             }
-            $rev = array_reverse( $ledger->result->transactions );
 
-            foreach ( $rev as $tx ) {
+            foreach ( $trans as $tx ) {
                 /* only care for payment transactions */
                 if ( $tx->tx->TransactionType != 'Payment' ) {
                     continue;
                 }
 
                 /* only care for inbound transactions */
-                if ( $tx->tx->Destination != $account ) {
+                if ( $tx->tx->Destination != $this->settings['xrp_account'] ) {
                     continue;
                 }
 
