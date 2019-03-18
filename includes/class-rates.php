@@ -125,6 +125,10 @@ class Rates {
             return (float)($rate * $eur);
         }
 
+        if ( $src == 'JPY' && ( ( $jpy = $this->eur( 'JPY' ) ) !== false ) ) {
+            return (float)(($rate / $jpy) * $eur);
+        }
+
         if ( $src != 'USD' || ( ( $usd = $this->eur( 'USD' ) ) === false ) ) {
             return false;
         }
@@ -162,6 +166,9 @@ class Rates {
                 break;
             case 'kraken':
                 $rate = $this->kraken();
+                break;
+            case 'bitbank':
+                $rate = $this->bitbank();
                 break;
         }
 
@@ -321,6 +328,18 @@ class Rates {
             $rate = $rate->xrpeur->last;
             $src = 'EUR';
         }
+
+        return $this->to_base( $rate, $src );
+    }
+
+    private function bitbank() {
+        $res = wp_remote_get( 'https://public.bitbank.cc/xrp_jpy/ticker' );
+        if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
+            return false;
+        }
+
+        $rate = $rate->data->last;
+        $src = 'JPY';
 
         return $this->to_base( $rate, $src );
     }
