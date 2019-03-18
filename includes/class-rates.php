@@ -125,10 +125,6 @@ class Rates {
             return (float)($rate * $eur);
         }
 
-        if ( $src == 'JPY' && ( ( $jpy = $this->eur( 'JPY' ) ) !== false ) ) {
-            return (float)(($rate / $jpy) * $eur);
-        }
-
         if ( $src != 'USD' || ( ( $usd = $this->eur( 'USD' ) ) === false ) ) {
             return false;
         }
@@ -332,16 +328,16 @@ class Rates {
         return $this->to_base( $rate, $src );
     }
 
+    /**
+     * Get Exchange rate from bitbank
+     * @return bool|float|int
+     */
     private function bitbank() {
         $res = wp_remote_get( 'https://public.bitbank.cc/xrp_jpy/ticker' );
         if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $rate = json_decode( $res['body'] ) ) == null ) {
             return false;
         }
 
-        $rate = $rate->data->last;
-        $src = 'JPY';
-
-        return $this->to_base( $rate, $src );
+        return $this->to_base( $rate->data->last, 'JPY' );
     }
-
 }
