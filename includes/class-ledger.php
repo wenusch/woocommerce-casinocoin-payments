@@ -4,10 +4,12 @@
 class Ledger
 {
     private $node = false;
+    private $headers = [];
 
     /**
-     * Ugly helper to print pretty statuses.
+     * Ledger constructor.
      * @param $node
+     * @param $proxy
      */
     function __construct( $node, $proxy=null ) {
         if ( empty( $node ) ) {
@@ -16,15 +18,14 @@ class Ledger
 
         if ( $proxy === 'yes' ) {
             $this->node = 'https://cors-anywhere.herokuapp.com/' . $node;
-            $headers = ['origin' => get_site_url()];
+            $this->headers = ['origin' => get_site_url()];
         } else {
             $this->node = $node;
-            $headers = [];
         }
     }
 
     /**
-     * Ugly helper to print pretty statuses.
+     * Send an account_tx request to the specify rippled node.
      * @param $account
      * @param $limit
      * @return bool|object
@@ -42,7 +43,7 @@ class Ledger
 
         $res = wp_remote_post( $this->node, array(
             'body' => $payload,
-            'headers' => $headers
+            'headers' => $this->headers
         ) );
         if ( is_wp_error( $res ) || $res['response']['code'] !== 200 ) {
             return false;
@@ -56,7 +57,7 @@ class Ledger
     }
 
     /**
-     * Check if the account is activated.
+     * Send an account_info request to the specify rippled node.
      * @param $account
      * @return bool
      */
@@ -70,7 +71,7 @@ class Ledger
 
         $res = wp_remote_post( $this->node, array(
             'body' => $payload,
-            'headers' => $headers
+            'headers' => $this->headers
         ) );
         if ( is_wp_error( $res ) || $res['response']['code'] !== 200 ) {
             return false;
@@ -82,5 +83,4 @@ class Ledger
 
         return $data->result;
     }
-
 }
