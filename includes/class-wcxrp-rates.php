@@ -140,12 +140,19 @@ class WCXRP_Rates {
      */
     public function get_rate( $exchange, array $exchanges ) {
         /* call the rate dynamically if it's in the exchanges list */
-        if (in_array($exchange, $exchanges))
-            if (function_exists($this->$exchange()))
+        if (in_array($exchange, $exchanges)) {
+            /* check if the function for the exchange exists - otherwise use bitstamp */
+            if (function_exists($this->$exchange())) {
                 $rate = $this->$exchange();
-            else $rate = $this->bitstamp();
+            }
+            else {
+                $rate = $this->bitstamp();
+            }
+        }
         /* otherwise check bitstamp as default */
-        else $rate = $this->bitstamp();
+        else {
+            $rate = $this->bitstamp();
+        }
 
         # in case the exchange is unreachable, try a different one.
         if ( $rate === false ) {
