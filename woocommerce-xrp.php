@@ -321,9 +321,9 @@ function wc_gateway_xrp_init() {
         public function process_payment( $order_id ) {
             $order = wc_get_order( $order_id );
 
-            /* specity where to obtain our rates from. */
+            /* specify where to obtain our rates from. */
             $rates = new WCXRP_Rates( $order->get_currency() );
-            $rate  = $rates->get_rate( $this->settings['exchange'] );
+            $rate  = $rates->get_rate( $this->settings['exchange'], $this->exchanges );
 
             if ( $rate === false ) {
                 return false;
