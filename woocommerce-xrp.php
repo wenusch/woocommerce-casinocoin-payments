@@ -24,10 +24,10 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
     return;
 }
 
-include_once dirname( __FILE__ ) . '/includes/class-webhooks.php';
-include_once dirname( __FILE__ ) . '/includes/class-rates.php';
-include_once dirname( __FILE__ ) . '/includes/class-helpers.php';
-include_once dirname( __FILE__ ) . '/includes/class-ledger.php';
+include_once dirname( __FILE__ ) . '/includes/class-wcxrp-webhooks.php';
+include_once dirname( __FILE__ ) . '/includes/class-wcxrp-rates.php';
+include_once dirname( __FILE__ ) . '/includes/class-wcxrp-helpers.php';
+include_once dirname( __FILE__ ) . '/includes/class-wcxrp-ledger.php';
 
 
 /**
@@ -67,7 +67,7 @@ function wc_gateway_xrp_init() {
 
             $this->init_settings();
 
-            $this->helpers = new Helpers();
+            $this->helpers = new WCXRP_Helpers();
 
             /* supported exchanges */
             $this->exchanges = [
@@ -106,7 +106,7 @@ function wc_gateway_xrp_init() {
                  add_action( 'admin_notices', array( $this, 'invalid_xrp' ) );
             }
 
-            $rates = new Rates( get_woocommerce_currency() );
+            $rates = new WCXRP_Rates( get_woocommerce_currency() );
             if ( $rates->supported() === false ) {
                 add_action( 'admin_notices', array( $this, 'supported_currencies' ) );
             }
@@ -153,7 +153,7 @@ function wc_gateway_xrp_init() {
                 return false;
             }
 
-            $wh = new Webhook( $this->settings['xrpl_webhook_api_pub'], $this->settings['xrpl_webhook_api_priv'] );
+            $wh = new WCXRP_Webhook( $this->settings['xrpl_webhook_api_pub'], $this->settings['xrpl_webhook_api_priv'] );
 
             /* webhooks */
             if ( ( $hooks = $wh->webhooks() ) === false ) {
@@ -187,7 +187,7 @@ function wc_gateway_xrp_init() {
             }
 
             /* make sure the xrp is activated */
-            $ledger = new Ledger(
+            $ledger = new WCXRP_Ledger(
                 $this->settings['xrp_node'],
                 $this->settings['xrp_bypass']
             );
@@ -322,7 +322,7 @@ function wc_gateway_xrp_init() {
             $order = wc_get_order( $order_id );
 
             /* specity where to obtain our rates from. */
-            $rates = new Rates( $order->get_currency() );
+            $rates = new WCXRP_Rates( $order->get_currency() );
             $rate  = $rates->get_rate( $this->settings['exchange'] );
 
             if ( $rate === false ) {
@@ -373,7 +373,7 @@ function wc_gateway_xrp_init() {
          * Parse the most recent transactions and match them against our orders.
          */
         public function check_ledger() {
-            $ledger = new Ledger(
+            $ledger = new WCXRP_Ledger(
                 $this->settings['xrp_node'],
                 $this->settings['xrp_bypass']
             );
@@ -454,17 +454,17 @@ function wc_gateway_xrp_init() {
 /**
  * Add the XRP payment gateway.
  */
-function wc_xrp_add_to_gateways( $gateways ) {
+add_filter( 'woocommerce_payment_gateways', 'wc_gateway_xrp_add' );
+function wc_gateway_xrp_add( $gateways ) {
     $gateways[] = 'WC_Gateway_XRP';
     return $gateways;
 }
-add_filter( 'woocommerce_payment_gateways', 'wc_xrp_add_to_gateways' );
 
 /**
  * Add custom meta_query so we can search by destination_tag.
  */
-add_filter( 'woocommerce_order_data_store_cpt_get_orders_query', 'handle_destination_tag_query', 10, 2 );
-function handle_destination_tag_query( $query, $query_vars ) {
+add_filter( 'woocommerce_order_data_store_cpt_get_orders_query', 'wc_gateway_xrp_destination_tag_query', 10, 2 );
+function wc_gateway_xrp_destination_tag_query( $query, $query_vars ) {
     if ( ! empty( $query_vars['destination_tag'] ) ) {
         $query['meta_query'][] = array(
             'key' => 'destination_tag',
@@ -478,9 +478,9 @@ function handle_destination_tag_query( $query, $query_vars ) {
 /*
  * Customize the "thank you" page in order to display payment info.
  */
-add_action( 'woocommerce_thankyou', 'thankyou_xrp_payment_info', 10 );
-add_action( 'woocommerce_view_order', 'thankyou_xrp_payment_info', 10 );
-function thankyou_xrp_payment_info( $order_id ) {
+add_action( 'woocommerce_thankyou', 'wc_gateway_xrp_thankyou_payment_info', 10 );
+add_action( 'woocommerce_view_order', 'wc_gateway_xrp_thankyou_payment_info', 10 );
+function wc_gateway_xrp_thankyou_payment_info( $order_id ) {
     if ( get_post_meta( $order_id, '_payment_method', true ) !== 'xrp' ) {
         return false;
     }
@@ -532,9 +532,9 @@ function thankyou_xrp_payment_info( $order_id ) {
 /**
  * Handle the AJAX callback to reload checkout details.
  */
-add_action( 'wp_ajax_xrp_checkout', 'xrp_checkout_handler' );
-add_action( 'wp_ajax_nopriv_xrp_checkout', 'xrp_checkout_handler' );
-function xrp_checkout_handler() {
+add_action( 'wp_ajax_xrp_checkout', 'wc_gateway_xrp_checkout_handler' );
+add_action( 'wp_ajax_nopriv_xrp_checkout', 'wc_gateway_xrp_checkout_handler' );
+function wc_gateway_xrp_checkout_handler() {
     $order = wc_get_order( $_POST['order_id'] );
 
     if ( $order == false ) {

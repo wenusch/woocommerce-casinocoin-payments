@@ -1,7 +1,7 @@
 <?php
 
 
-class Ledger
+class WCXRP_Ledger
 {
     private $node = false;
     private $headers = [];

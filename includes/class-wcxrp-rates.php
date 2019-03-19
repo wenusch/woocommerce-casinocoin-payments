@@ -1,6 +1,6 @@
 <?php
 
-class Rates {
+class WCXRP_Rates {
     private $ecb_cache = 'woo_ecb_rates.xml';
 
     /**
