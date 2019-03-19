@@ -135,38 +135,15 @@ class WCXRP_Rates {
     /**
      * Get XRP exchange rate
      * @param $exchange
+     * @param array $exchanges
      * @return bool|float|int
      */
-    public function get_rate( $exchange ) {
-        switch ($exchange) {
-            case 'binance':
-                $rate = $this->binance();
-                break;
-            case 'bitbank':
-                $rate = $this->bitbank();
-                break;
-            case 'bitfinex':
-                $rate = $this->bitfinex();
-                break;
-            case 'bitlish':
-                $rate = $this->bitlish();
-                break;
-            case 'bitmex':
-                $rate = $this->bitmex();
-                break;
-            case 'bitstamp':
-                $rate = $this->bitstamp();
-                break;
-            case 'bittrex':
-                $rate = $this->bittrex();
-                break;
-            case 'bxinth':
-                $rate = $this->bxinth();
-                break;
-            case 'kraken':
-                $rate = $this->kraken();
-                break;
-        }
+    public function get_rate( $exchange, array $exchanges ) {
+        /* call the rate dynamically if it's in the exchanges list */
+        if (in_array($exchange, $exchanges))
+            $rate = $this->$exchange();
+        /* otherwise check bitstamp as default */
+        else $rate = $this->bitstamp();
 
         # in case the exchange is unreachable, try a different one.
         if ( $rate === false ) {

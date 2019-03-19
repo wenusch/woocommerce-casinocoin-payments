@@ -323,7 +323,7 @@ function wc_gateway_xrp_init() {
 
             /* specity where to obtain our rates from. */
             $rates = new WCXRP_Rates( $order->get_currency() );
-            $rate  = $rates->get_rate( $this->settings['exchange'] );
+            $rate  = $rates->get_rate( $this->settings['exchange'], $this->exchanges );
 
             if ( $rate === false ) {
                 return false;
