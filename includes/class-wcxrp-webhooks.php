@@ -1,6 +1,6 @@
 <?php
 
-class Webhook {
+class WCXRP_Webhook {
 
     protected $pub;
     protected $secret;

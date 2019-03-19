@@ -1,7 +1,7 @@
 <?php
 
 
-class Helpers
+class WCXRP_Helpers
 {
     /**
      * Ugly helper to print pretty statuses.
