@@ -12,6 +12,7 @@ class WCXRP_Rates {
     }
 
     /**
+     * Check if currency is supported
      * @param array $currencies
      * @return bool
      */
