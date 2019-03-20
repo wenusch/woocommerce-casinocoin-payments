@@ -8,7 +8,7 @@ class WCXRP_Rates {
      * @param $base_currency
      */
     public function __construct( $base_currency ) {
-        $this->base_currency = strtoupper($base_currency);
+        $this->base_currency = strtoupper( $base_currency );
     }
 
     /**
@@ -70,7 +70,7 @@ class WCXRP_Rates {
         if ( !file_exists( $cache ) || !is_readable( $cache ) ) {
             return false;
         }
-        if (filemtime( $this->cache ) < strtotime( 'today 16:00:00 CET' ) && date('N') <= 5 ) {
+        if (filemtime( $this->cache ) < strtotime( 'today 16:00:00 CET' ) && date( 'N' ) <= 5 ) {
             return false;
         }
 
@@ -109,7 +109,7 @@ class WCXRP_Rates {
      * @return bool|float|int
      */
     private function to_base( $rate, $src ) {
-        if ( empty($rate) || empty($src) ) {
+        if ( empty( $rate ) || empty( $src ) ) {
             return false;
         }
 
@@ -122,14 +122,14 @@ class WCXRP_Rates {
         }
 
         if ( $src == 'EUR' ) {
-            return (float)($rate * $eur);
+            return (float)( $rate * $eur );
         }
 
         if ( $src != 'USD' || ( ( $usd = $this->eur( 'USD' ) ) === false ) ) {
             return false;
         }
 
-        return ($rate / $usd) * $eur;
+        return ( $rate / $usd ) * $eur;
     }
 
     /**
@@ -140,17 +140,15 @@ class WCXRP_Rates {
      */
     public function get_rate( $exchange, array $exchanges ) {
         /* call the rate dynamically if it's in the exchanges list */
-        if (in_array($exchange, $exchanges)) {
+        if ( in_array( $exchange, $exchanges ) ) {
             /* check if the function for the exchange exists - otherwise use bitstamp */
-            if (function_exists($this->$exchange())) {
+            if ( function_exists( $this->$exchange() ) ) {
                 $rate = $this->$exchange();
-            }
-            else {
+            } else {
                 $rate = $this->bitstamp();
             }
-        }
         /* otherwise check bitstamp as default */
-        else {
+        } else {
             $rate = $this->bitstamp();
         }
 
@@ -206,7 +204,7 @@ class WCXRP_Rates {
         }
 
         /* ugly? */
-        foreach ($rate->result as $rate) {
+        foreach ( $rate->result as $rate ) {
             $rate = (float)$rate->c[0];
             break;
         };
