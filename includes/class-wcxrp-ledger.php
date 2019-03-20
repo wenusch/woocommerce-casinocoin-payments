@@ -1,6 +1,5 @@
 <?php
 
-
 class WCXRP_Ledger
 {
     private $node = false;
@@ -11,12 +10,13 @@ class WCXRP_Ledger
      * @param $node
      * @param $proxy
      */
-    function __construct( $node, $proxy=null ) {
-        if ( empty( $node ) ) {
+    function __construct($node, $proxy=null)
+    {
+        if (empty($node)) {
             $node = 'https://s2.ripple.com:51234';
         }
 
-        if ( $proxy === 'yes' ) {
+        if ($proxy === 'yes') {
             $this->node = 'https://cors-anywhere.herokuapp.com/' . $node;
             $this->headers = ['origin' => get_site_url()];
         } else {
@@ -30,8 +30,9 @@ class WCXRP_Ledger
      * @param $limit
      * @return bool|object
      */
-    function account_tx( $account, $limit = 10 ) {
-        $payload = json_encode( [
+    function account_tx($account, $limit = 10)
+    {
+        $payload = json_encode([
             'method' => 'account_tx',
             'params' => [[
                 'account' => $account,
@@ -39,21 +40,20 @@ class WCXRP_Ledger
                 'ledger_index_max' => -1,
                 'limit' => $limit,
             ]]
-        ] );
+        ]);
 
-        $res = wp_remote_post( $this->node, array(
+        $res = wp_remote_post($this->node, [
             'body' => $payload,
             'headers' => $this->headers
-        ) );
-        if ( is_wp_error( $res ) || $res['response']['code'] !== 200 ) {
+        ]);
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
+            return false;
+        }
+        if (($data = json_decode($res['body'])) === null) {
             return false;
         }
 
-        if ( ( $data = json_decode( $res['body'] ) ) == null ) {
-            return false;
-        }
-
-        return array_reverse( $data->result->transactions );
+        return array_reverse($data->result->transactions);
     }
 
     /**
@@ -61,23 +61,23 @@ class WCXRP_Ledger
      * @param $account
      * @return bool
      */
-    function account_info( $account ) {
-        $payload = json_encode( [
+    function account_info($account)
+    {
+        $payload = json_encode([
             'method' => 'account_info',
             'params' => [[
                 'account' => $account
             ]]
-        ] );
+        ]);
 
-        $res = wp_remote_post( $this->node, array(
+        $res = wp_remote_post($this->node, [
             'body' => $payload,
             'headers' => $this->headers
-        ) );
-        if ( is_wp_error( $res ) || $res['response']['code'] !== 200 ) {
+        ]);
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
             return false;
         }
-
-        if ( ( $data = json_decode( $res['body'] ) ) == null ) {
+        if (($data = json_decode($res['body'])) === null) {
             return false;
         }
 
