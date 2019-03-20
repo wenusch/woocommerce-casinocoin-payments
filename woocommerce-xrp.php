@@ -342,20 +342,18 @@ function wc_gateway_xrp_init()
             /* round to our advantage with 6 decimals */
             $xrp = round(ceil(($order->get_total() / $rate) * 1000000) / 1000000, 6);
 
+            /* check if php is 32bit or 64bit */
+            if (PHP_INT_SIZE === 4) {
+                $int_max = 2147483646;
+            } else {
+                $int_max = 4294967295;
+            }
+
             /* try to get the destination tag as random as possible. */
             if (function_exists('random_int')) {
-                // check if php is 32bit or 64bit
-                if (PHP_INT_SIZE == 4) {
-                    $tag = random_int(1, 2147483646);
-                } else {
-                    $tag = random_int(1, 4294967295);
-                }
+                $tag = random_int(1, $int_max);
             } else {
-                if (PHP_INT_SIZE == 4) {
-                    $tag = mt_rand(1, 2147483646);
-                } else {
-                    $tag = mt_rand(1, 4294967295);
-                }
+                $tag = mt_rand(1, $int_max);
             }
 
             /**
