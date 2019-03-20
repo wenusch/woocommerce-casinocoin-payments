@@ -372,4 +372,21 @@ class WCXRP_Rates
 
         return $this->to_base($rate->data->last, 'JPY');
     }
+
+    /**
+     * Get Exchange rate from bitrue
+     * @return bool|float|int
+     */
+    private function bitrue()
+    {
+        $res = wp_remote_get('https://www.bitrue.com/kline-api/publicXRP.json?command=returnTicker');
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
+            return false;
+        }
+        if (($rate = json_decode($res['body'])) === null) {
+            return false;
+        }
+
+        return $this->to_base($rate->data->XRP_USDT->last, 'USD');
+    }
 }

@@ -82,6 +82,7 @@ function wc_gateway_xrp_init()
                 'bitfinex' => 'Bitfinex',
                 'bitlish'  => 'Bitlish',
                 'bitmex'   => 'BitMEX',
+                'bitrue'   => 'Bitrue',
                 'bitstamp' => 'Bitstamp',
                 'bittrex'  => 'Bittrex',
                 'bxinth'   => 'Bitcoin Exchange Thailand',
