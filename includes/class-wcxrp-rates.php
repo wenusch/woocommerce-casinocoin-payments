@@ -14,20 +14,6 @@ class WCXRP_Rates
     }
 
     /**
-     * Supported currencies
-     * @return bool
-     */
-    public function supported()
-    {
-        return in_array($this->base_currency, [
-            'USD','JPY','BGN','CZK','DKK','GBP','HUF','PLN','RON','SEK','CHF',
-            'ISK','NOK','HRK','RUB','TRY','AUD','BRL','CAD','CNY','HKD','IDR',
-            'ILS','INR','KRW','MXN','MYR','NZD','PHP','SGD','THB','ZAR','EUR'
-        ]);
-    }
-
-
-    /**
      * Get rated from the European Central Bank
      * @return bool|string
      */
