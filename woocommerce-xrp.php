@@ -58,6 +58,7 @@ function wc_gateway_xrp_init() {
 
         public $helpers;
         protected $exchanges;
+        protected $currencies;
 
         public function __construct() {
             $this->id                    = 'xrp';
@@ -80,6 +81,13 @@ function wc_gateway_xrp_init() {
                 'bittrex'  => 'Bittrex',
                 'bxinth'   => 'Bitcoin Exchange Thailand',
                 'kraken'   => 'Kraken'
+            ];
+
+            /* supported currencies */
+            $this->currencies = [
+                'USD','JPY','BGN','CZK','DKK','GBP','HUF','PLN','RON','SEK','CHF',
+                'ISK','NOK','HRK','RUB','TRY','AUD','BRL','CAD','CNY','HKD','IDR',
+                'ILS','INR','KRW','MXN','MYR','NZD','PHP','SGD','THB','ZAR','EUR'
             ];
 
             /* sort the exchanges alphabetically */
@@ -107,7 +115,7 @@ function wc_gateway_xrp_init() {
             }
 
             $rates = new WCXRP_Rates( get_woocommerce_currency() );
-            if ( $rates->supported() === false ) {
+            if ( $rates->supported($this->currencies) === false ) {
                 add_action( 'admin_notices', array( $this, 'supported_currencies' ) );
             }
 
