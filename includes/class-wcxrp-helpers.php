@@ -1,6 +1,5 @@
 <?php
 
-
 class WCXRP_Helpers
 {
     /**
