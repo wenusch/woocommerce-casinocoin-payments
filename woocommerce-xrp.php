@@ -90,7 +90,7 @@ function wc_gateway_xrp_init()
             ];
 
             /* sort the exchanges alphabetically */
-            asort($this->exchanges);
+            natcasesort($this->exchanges);
 
             $this->title                 = $this->settings['title'];
             $this->description           = $this->settings['description'];
