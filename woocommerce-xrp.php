@@ -488,11 +488,7 @@ function wc_gateway_xrp_thankyou_payment_info( $order_id ) {
     $remaining = round( (float)get_post_meta( $order_id, 'total_amount', true ) - (float)get_post_meta( $order_id, 'delivered_amount', true ) , 6 );
  ?>
     <h2><?php _e( 'XRP payment details', 'wc-gateway-xrp' ); ?></h2>
-    <div class="xrp_qr_container">
-        <?php if ( get_post_status( $order_id ) == 'wc-pending' ) { ?>
-        <img id="xrp_qr" src="<?php echo $gateway->helpers->xrp_qr( $gateway->settings['xrp_account'], get_post_meta( $order_id, 'destination_tag', true ), $remaining ) ?>">
-        <?php } ?>
-    </div>
+    <div id="wc_xrp_qrcode"></div>
     <table class="woocommerce-table shop_table xrp_info">
         <tbody>
             <tr>
@@ -524,8 +520,9 @@ function wc_gateway_xrp_thankyou_payment_info( $order_id ) {
     <?php
 
     if (get_post_status( $order_id ) == 'wc-pending' ) {
-        wp_enqueue_script( 'ajax-script', plugins_url( '/js/checkout.js', __FILE__ ), array( 'jquery' ) );
-        wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'order_id' => $order_id ) );
+        wp_enqueue_script( 'wcxrp-qrcode', plugins_url( '/js/qrcodejs/qrcodejs.min.js', __FILE__ ), array( 'jquery' ) );
+        wp_enqueue_script( 'wcxrp-ajax', plugins_url( '/js/checkout.js', __FILE__ ), array( 'jquery' ) );
+        wp_localize_script( 'wcxrp-ajax', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'order_id' => $order_id ) );
     }
 }
 
@@ -556,7 +553,6 @@ function wc_gateway_xrp_checkout_handler() {
         'xrp_received'  => $xrp_received,
         'xrp_remaining' => $remaining,
         'status'        => $gateway->helpers->wc_pretty_status( $status ),
-        'qr'            => $gateway->helpers->xrp_qr( $gateway->settings['xrp_account'], $tag, $remaining ),
         'raw_status'    => $status
     );
 
