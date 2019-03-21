@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce XRP
  * Plugin URI: http://github.com/empatogen/woocommerce-xrp
  * Description: A payment gateway for WooCommerce to accept <a href="https://ripple.com/xrp">XRP</a> payments.
- * Version: 1.0.3
+ * Version: 1.1.0
  * Author: Jesper Wallin
  * Author URI: https://ifconfig.se/
  * Developer: Jesper Wallin
@@ -19,7 +19,7 @@
  */
 
 /* If this file is called directly, abort. */
-if ( !defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
     die;
 }
 
@@ -29,36 +29,40 @@ if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get
 }
 
 /* define constants */
-define( 'WX_VERSION', '1.1.0' );
-define( 'WX_TEXTDOMAIN', 'wc-gateway-xrp' );
-define( 'WX_NAME', 'Woocommerce XRP' );
-define( 'WX_PLUGIN_ROOT', plugin_dir_path( __FILE__ ) );
-define( 'WX_PLUGIN_ABSOLUTE', __FILE__ );
+define('WX_VERSION', '1.1.0');
+define('WX_TEXTDOMAIN', 'wc-gateway-xrp');
+define('WX_NAME', 'Woocommerce XRP');
+define('WX_PLUGIN_ROOT', plugin_dir_path( __FILE__));
+define('WX_PLUGIN_ABSOLUTE', __FILE__);
 
-if ( ! function_exists( 'woocommerce_xrp_payment' ) ) {
+if (!function_exists('woocommerce_xrp_payment')) {
     /**
      * Unique access to instance of WC_Payment_XRP class
      *
      * @return \WC_Payment_XRP
      */
-    function woocommerce_xrp_payment() {
+    function woocommerce_xrp_payment()
+    {
         // Load required classes and functions
-        include_once dirname(__FILE__) .'/includes/class-wcxrp-base.php';
+        include_once dirname(__FILE__) . '/includes/class-wcxrp-base.php';
         return WC_Payment_XRP::get_instance();
     }
 }
-if ( ! function_exists( 'wc_gateway_xrp_constructor' ) ) {
-    function wc_gateway_xrp_constructor() {
+if (!function_exists('wc_gateway_xrp_constructor')) {
+    function wc_gateway_xrp_constructor()
+    {
         /**
          * Load translations.
          */
-                load_plugin_textdomain( 'wc-gateway-xrp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-                woocommerce_xrp_payment();
-            }
-        }
-        add_action( 'plugins_loaded', 'wc_gateway_xrp_constructor' );
-
-
+        load_plugin_textdomain(
+            'wc-gateway-xrp',
+            false,
+            dirname(plugin_basename(__FILE__)) . '/languages/'
+        );
+        woocommerce_xrp_payment();
+    }
+}
+add_action('plugins_loaded', 'wc_gateway_xrp_constructor');
 
 /**
  * Add custom meta_query so we can search by destination_tag.
@@ -86,7 +90,7 @@ function wc_gateway_xrp_thankyou_payment_info($order_id)
     if (get_post_meta($order_id, '_payment_method', true) !== 'xrp') {
         return false;
     }
-    $gateway    = new WC_Gateway_XRP();
+    $gateway   = new WC_Gateway_XRP();
     $total     = (float)get_post_meta($order_id, 'total_amount', true);
     $delivered = (float)get_post_meta($order_id, 'delivered_amount', true);
     $remaining = round($total - $delivered, 6);

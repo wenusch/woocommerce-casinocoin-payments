@@ -1,6 +1,6 @@
 <?php
 
-if( ! class_exists( 'WC_Payment_XRP' ) ) {
+if(!class_exists('WC_Payment_XRP')) {
     /**
      * WooCommerce XRPL Payment main class
      *
@@ -15,6 +15,7 @@ if( ! class_exists( 'WC_Payment_XRP' ) ) {
          * @since 1.0.0
          */
         protected static $instance;
+
         /**
          * XRP Payment gateway id
          *
@@ -22,6 +23,7 @@ if( ! class_exists( 'WC_Payment_XRP' ) ) {
          * @since 1.0
          */
         public static $gateway_id = 'WC_Gateway_XRP';
+
         /**
          * The gateway object
          *
@@ -41,6 +43,7 @@ if( ! class_exists( 'WC_Payment_XRP' ) ) {
             if (is_null(self::$instance)) {
                 self::$instance = new self;
             }
+
             return self::$instance;
         }
 
@@ -53,12 +56,15 @@ if( ! class_exists( 'WC_Payment_XRP' ) ) {
         public function __construct()
         {
             // add filter to append wallet as payment gateway
-            include_once 'class-wcxrp-webhooks.php';
-            include_once 'class-wcxrp-rates.php';
-            include_once 'class-wcxrp-helpers.php';
-            include_once 'class-wcxrp-ledger.php';
-            include_once 'class-wcxrp-gateway.php';
-            add_filter('woocommerce_payment_gateways', array($this, 'add_to_gateways'));
+            include_once('class-wcxrp-webhooks.php');
+            include_once('class-wcxrp-rates.php');
+            include_once('class-wcxrp-helpers.php');
+            include_once('class-wcxrp-ledger.php');
+            include_once('class-wcxrp-gateway.php');
+            add_filter(
+                'woocommerce_payment_gateways',
+                [$this, 'add_to_gateways']
+            );
         }
 
         /**
@@ -71,7 +77,10 @@ if( ! class_exists( 'WC_Payment_XRP' ) ) {
          */
         public function add_to_gateways($methods)
         {
-            self::$gateway_id = apply_filters('wc_xrp_gateway_id', self::$gateway_id);
+            self::$gateway_id = apply_filters(
+                'wc_xrp_gateway_id',
+                self::$gateway_id
+            );
             include_once('class-wcxrp-gateway.php');
             $methods[] = 'WC_Gateway_XRP';
             return $methods;
