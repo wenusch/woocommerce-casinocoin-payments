@@ -58,15 +58,7 @@ if ( ! function_exists( 'wc_gateway_xrp_constructor' ) ) {
         }
         add_action( 'plugins_loaded', 'wc_gateway_xrp_constructor' );
 
-        /**
-         * Add the XRP payment gateway.
-         */
-add_filter('woocommerce_payment_gateways', 'wc_gateway_xrp_add');
-function wc_gateway_xrp_add($gateways)
-{
-    $gateways[] = 'WC_Gateway_XRP';
-    return $gateways;
-}
+
 
 /**
  * Add custom meta_query so we can search by destination_tag.
@@ -94,7 +86,7 @@ function wc_gateway_xrp_thankyou_payment_info($order_id)
     if (get_post_meta($order_id, '_payment_method', true) !== 'xrp') {
         return false;
     }
-    $gateway =  new  WC_Gateway_XRP();
+    $gateway    = new WC_Gateway_XRP();
     $total     = (float)get_post_meta($order_id, 'total_amount', true);
     $delivered = (float)get_post_meta($order_id, 'delivered_amount', true);
     $remaining = round($total - $delivered, 6);
