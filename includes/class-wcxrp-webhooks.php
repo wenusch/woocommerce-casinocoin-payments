@@ -1,7 +1,7 @@
 <?php
 
-class WCXRP_Webhook {
-
+class WCXRP_Webhook
+{
     protected $pub;
     protected $secret;
     public $base = 'https://webhook.xrpayments.co/api/v1/';
@@ -12,7 +12,8 @@ class WCXRP_Webhook {
      * @param $pub
      * @param $secret
      */
-    public function __construct( $pub, $secret ) {
+    public function __construct($pub, $secret)
+    {
         $this->pub = $pub;
         $this->secret = $secret;
     }
@@ -20,17 +21,26 @@ class WCXRP_Webhook {
     /**
      * @return bool
      */
-    public function subscriptions() {
-        if ( empty( $this->pub ) || empty( $this->secret ) ) {
+    public function subscriptions()
+    {
+        if (empty($this->pub) || empty($this->secret)) {
             return false;
         }
 
-        $headers = array(
+        $headers = [
             'x-api-key' => $this->pub,
             'x-api-secret' => $this->secret
+        ];
+        $res = wp_remote_get(
+            $this->base . 'subscriptions',
+            [
+                'headers' => $headers
+            ]
         );
-        $res = wp_remote_get( $this->base . 'subscriptions', array( 'headers' => $headers ) );
-        if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $data = json_decode( $res['body'] ) ) == null ) {
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
+            return false;
+        }
+        if (($data = json_decode($res['body'])) === null) {
             return false;
         }
 
@@ -41,23 +51,30 @@ class WCXRP_Webhook {
      * @param $address
      * @return bool
      */
-    public function add_subscription( $address ) {
-        if ( empty( $address ) || empty( $this->pub ) || empty( $this->secret ) ) {
+    public function add_subscription($address)
+    {
+        if (empty($address) || empty($this->pub) || empty($this->secret)) {
             return false;
         }
 
-        $headers = array(
+        $headers = [
             'Content-Type' => 'application/json; charset=utf-8',
             'x-api-key' => $this->pub,
             'x-api-secret' => $this->secret
-        );
-        $payload = json_encode( array( 'address' => trim( $address ) ) );
+        ];
+        $payload = json_encode(['address' => trim($address)]);
 
-        $res = wp_remote_post( $this->base . 'subscriptions', array(
-            'headers' => $headers,
-            'body' => $payload
-        ) );
-        if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $data = json_decode( $res['body'] ) ) == null ) {
+        $res = wp_remote_post(
+            $this->base . 'subscriptions',
+            [
+                'headers' => $headers,
+                'body' => $payload
+            ]
+        );
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
+            return false;
+        }
+        if (($data = json_decode($res['body'])) === null) {
             return false;
         }
 
@@ -67,16 +84,25 @@ class WCXRP_Webhook {
     /**
      * @return bool
      */
-    public function webhooks() {
-        if ( empty( $this->pub ) || empty( $this->secret ) ) {
+    public function webhooks()
+    {
+        if (empty($this->pub) || empty($this->secret)) {
             return false;
         }
-        $headers = array(
+        $headers = [
             'x-api-key' => $this->pub,
             'x-api-secret' => $this->secret
+        ];
+        $res = wp_remote_get(
+            $this->base . 'webhooks',
+            [
+                'headers' => $headers
+            ]
         );
-        $res = wp_remote_get( $this->base . 'webhooks', array( 'headers' => $headers ) );
-        if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $data = json_decode( $res['body'] ) ) == null ) {
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
+            return false;
+        }
+        if (($data = json_decode($res['body'])) === null) {
             return false;
         }
 
@@ -87,22 +113,29 @@ class WCXRP_Webhook {
      * @param $url
      * @return bool
      */
-    public function add_webhook( $url ) {
-        if ( empty( $url ) || empty( $this->pub ) || empty( $this->secret ) ) {
+    public function add_webhook($url)
+    {
+        if (empty($url) || empty($this->pub) || empty($this->secret)) {
             return false;
         }
 
-        $headers = array(
+        $headers = [
             'Content-Type' => 'application/json; charset=utf-8',
             'x-api-key' => $this->pub,
             'x-api-secret' => $this->secret
+        ];
+        $payload = json_encode(['url' => trim($url)]);
+        $res = wp_remote_post(
+            $this->base . 'webhooks',
+            [
+                'headers' => $headers,
+                'body' => $payload
+            ]
         );
-        $payload = json_encode( array( 'url' => trim( $url ) ) );
-        $res = wp_remote_post( $this->base . 'webhooks', array(
-            'headers' => $headers,
-            'body' => $payload
-        ) );
-        if ( is_wp_error( $res ) || $res['response']['code'] !== 200 || ( $data = json_decode( $res['body'] ) ) == null ) {
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
+            return false;
+        }
+        if (($data = json_decode($res['body'])) === null) {
             return false;
         }
 
