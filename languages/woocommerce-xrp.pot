@@ -184,3 +184,35 @@ msgstr ""
 #: woocommerce-xrp.php:525
 msgid "Order status"
 msgstr ""
+
+#: class-wcxrp-helpers.php:14
+msgid "Pending payment"
+msgstr ""
+
+#: class-wcxrp-helpers.php:16
+msgid "Processing (Paid)"
+msgstr ""
+
+#: class-wcxrp-helpers.php:18
+msgid "On hold"
+msgstr ""
+
+#: class-wcxrp-helpers.php:20
+msgid "Completed"
+msgstr ""
+
+#: class-wcxrp-helpers.php:22
+msgid "Cancelled"
+msgstr ""
+
+#: class-wcxrp-helpers.php:24
+msgid "Refunded"
+msgstr ""
+
+#: class-wcxrp-helpers.php:26
+msgid "Failed"
+msgstr ""
+
+#: class-wcxrp-helpers.php:28
+msgid "Unknown"
+msgstr ""
