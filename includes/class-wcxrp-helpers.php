@@ -3,7 +3,7 @@
 class WCXRP_Helpers
 {
     /**
-     * Ugly helper to print pretty statuses.
+     * Helper to print pretty statuses.
      * @param $status
      * @return string
      */
@@ -11,21 +11,21 @@ class WCXRP_Helpers
     {
         switch ($status) {
             case 'wc-pending':
-                return 'Pending payment';
+                return __('Pending payment', 'wc-gateway-xrp');
             case 'wc-processing':
-                return 'Processing (Paid)';
+                return __('Processing (Paid)', 'wc-gateway-xrp');
             case 'wc-on-hold':
-                return 'On hold';
+                return __('On hold', 'wc-gateway-xrp');
             case 'wc-completed':
-                return 'Completed';
+                return __('Completed', 'wc-gateway-xrp');
             case 'wc-cancelled':
-                return 'Cancelled';
+                return __('Cancelled', 'wc-gateway-xrp');
             case 'wc-refunded':
-                return 'Refunded';
+                return __('Refunded', 'wc-gateway-xrp');
             case 'wc-failed':
-                return 'Failed';
+                return __('Failed', 'wc-gateway-xrp');
             default:
-                return 'Unknown';
+                return __('Unknown', 'wc-gateway-xrp');
         }
     }
 }
