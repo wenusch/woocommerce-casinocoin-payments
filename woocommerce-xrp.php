@@ -90,7 +90,6 @@ function wc_gateway_xrp_thankyou_payment_info($order_id)
     if (get_post_meta($order_id, '_payment_method', true) !== 'xrp') {
         return false;
     }
-    $gateway   = new WC_Gateway_XRP();
     $total     = (float)get_post_meta($order_id, 'total_amount', true);
     $delivered = (float)get_post_meta($order_id, 'delivered_amount', true);
     $remaining = round($total - $delivered, 6);
@@ -101,7 +100,7 @@ function wc_gateway_xrp_thankyou_payment_info($order_id)
         <tbody>
             <tr>
                 <th><?php _e('XRP Account', 'wc-gateway-xrp'); ?></th>
-                <td id="xrp_account"><?php _e($gateway->settings['xrp_account'] , 'wc-gateway-xrp') ?></td>
+                <td id="xrp_account"><?php _e( WC_Payment_XRP::get_instance()->gateway->settings['xrp_account'] , 'wc-gateway-xrp') ?></td>
             </tr>
             <tr>
                 <th><?php _e('Destination tag', 'wc-gateway-xrp'); ?></th>
@@ -121,7 +120,7 @@ function wc_gateway_xrp_thankyou_payment_info($order_id)
             </tr>
             <tr>
                 <th><?php _e('Order status', 'wc-gateway-xrp'); ?></th>
-                <td id="xrp_status"><?php echo $gateway->helpers->wc_pretty_status(get_post_status($order_id)) ?></td>
+                <td id="xrp_status"><?php echo WC_Payment_XRP::get_instance()->helpers->wc_pretty_status(get_post_status($order_id)) ?></td>
             </tr>
         </tbody>
     </table>
@@ -167,7 +166,6 @@ function wc_gateway_xrp_checkout_handler()
         wp_die();
     }
 
-    $gateway      = new WC_Gateway_XRP();
     $tag          = get_post_meta($_POST['order_id'], 'destination_tag', true);
     $xrp_total    = round(get_post_meta($_POST['order_id'], 'total_amount', true), 6);
     $xrp_received = round(get_post_meta($_POST['order_id'], 'delivered_amount', true), 6);
@@ -175,12 +173,12 @@ function wc_gateway_xrp_checkout_handler()
     $status       = get_post_status($_POST['order_id']);
 
     $result = [
-        'xrp_account'   => $gateway->settings['xrp_account'],
+        'xrp_account'   => WC_Payment_XRP::get_instance()->gateway->settings['xrp_account'],
         'tag'           => $tag,
         'xrp_total'     => $xrp_total,
         'xrp_received'  => $xrp_received,
         'xrp_remaining' => $remaining,
-        'status'        => $gateway->helpers->wc_pretty_status($status),
+        'status'        => WC_Payment_XRP::get_instance()->helpers->wc_pretty_status($status),//$gateway->helpers->wc_pretty_status($status),
         'raw_status'    => $status
     ];
 
