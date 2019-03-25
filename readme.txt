@@ -1,5 +1,6 @@
 === WooCommerce XRP ===
 Contributors: empatogen
+Donate link: rscKqdNj1ECXamMoxxwejTnBmhwTpBvTKz
 Tags: woo, woocommerce, xrp, gateway, cryptocurrency
 Requires at least: 5.1
 Tested up to: 5.1.1
@@ -7,19 +8,61 @@ Requires PHP: 7.0
 Stable tag: trunk
 License: ISC License
 
-WooCommerce XRP is a payment gateway for WooCommerce that easily lets you accept XRP as payments method.
+WooCommerce XRP is a payment gateway for WooCommerce that easily lets you accept [XRP](https://ripple.com/xrp) as payments method.
 
 == Description ==
-WooCommerce XRP is a payment gateway which makes it easy to accept [XRP](https://ripple.com/xrp) as a payment method. You can choose between multiple different cryptocurrency exchanges in order to get the XRP rates upon checkout. With the ease of [XRPL Webhooks](https://webhook.xrpayments.co), the order is updates in seconds after the payment is made. This is particularly useful if your customer is making a partial payment, since a new QR-code is generated with the correct amount left to pay.
+
+WooCommerce XRP is a payment gateway which makes it easy to accept [XRP](https://ripple.com/xrp) as a payment method. You can choose between multiple different cryptocurrency exchanges in order to get the latest XRP rates upon checkout. With the ease of [XRPL Webhooks](https://webhook.xrpayments.co), the order is updated in seconds after the payment is made. This is particularly useful if your customer is making a partial payment, since a new QR-code is generated with the remaining amount of XRP to pay to complete the order.
 
 == Installation ==
-Download the [latest release](https://github.com/empatogen/woocommerce-xrp/archive/v1.0.3.zip) and unpack in your wp-content/plugins folder. Go to "WooCommerce -> Settings -> Payments" and setup the plugin.
+
+1. Upload the plugin to the `/wp-content/plugins/woocommerce-xrp` directory folder, or install the plugin through the WordPress plugin screen directly.
+1. Activate the plugin through the `Plugins` screen in Wordpress.
+1. Create a free account at [XRPL Webhook](https://webhook.xrpayments.co) and obtain your **API keys**. This is required as the plugin uses this webhook to update the checkout page whenever a payment is made.
+1. Go to "WooCommerce -> Settings -> Payments" and configure the plugin.
 
 == FAQ ==
-Yet to be written.
+
+= Which XRP server (rippled) is used by default? =
+
+The node **s2.ripple.com** is being used to talk to the XRP network. This can easily be changed under *Advanced* and you can use any public XRP server.
+
+= Which exchanges is supported? =
+
+You can specify between [Binance](https://www.binance.com/), [Bitbank](https://bitbank.cc/), [Bitfinex](https://www.bitfinex.com/), [Bitlish](https://bitlish.com/), [BitMEX](https://www.bitmex.com/), [Bitrue](https://www.bitrue.com/), [Bitstamp](https://www.bitstamp.net/), [Bittrex](https://www.bittrex.com), [Bitcoin Exchange Thailand](https://bx.in.th/) or [Kraken](https://www.kraken.com/) as the exchange to use when fetching the XRP rate when the customer is checking out.
+
+= What does the bypass firewall feature do? =
+
+By default, we speak [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on port 51234 with the XRP server. Some webservers are behind a firewall that doesn't allow outgoing traffic on non-standard ports. By enabling this feature, we talk to [cors-anywhere.herokuapp.com](https://cors-anywhere.herokuapp.com/), using TLS on port 443, which then acts as a proxy and relays the traffic to the XRP server.
 
 == Changelog ==
-Check the [commit log](https://github.com/empatogen/woocommerce-xrp/commits/master) for now.
 
-== Donate ==
-If you like this plugin and wish to donate, feel free to send some XRP to rscKqdNj1ECXamMoxxwejTnBmhwTpBvTKz. :-)
+= 1.1.0 =
+* Remove the use of Google Chart to generate the QR-code. Use [qrcodejs](https://github.com/davidshimjs/qrcodejs) instead.
+* Change to a singleton layout to avoid conflicting with other plugins.
+* Add check to ensure that the specified XRP account is activated.
+* Add a new exchange. ([Bitrue](https://www.bitrue.com/))
+* Fix a bug which prevents us from running on 32bit systems.
+
+= 1.0.3 =
+* Add 3 new exchanges. ([Bitbank](https://bitbank.cc/), [Bitcoin Exchange Thailand](https://bx.in.th/) and [Bitlish](https://bitlish.com/))
+* Add 31 new currencies.
+* Add 2 new languages. (Dutch and Japanese))
+* Add a proxy feature to bypass your servers firewall.
+* Lots of bugfixes.
+
+= 1.0.2 =
+* Add mitigations against [the partial payment exploit](https://developers.ripple.com/partial-payments.html#partial-payments-exploit).
+
+= 1.0.1 =
+* Remove the cURL dependency and use wp_remote_get() and wp_remote_post() instead.
+
+= 1.0.0 =
+* Initial release!
+
+== Acknowledgments ==
+
+* A huge thank you to both [Ripple](https://ripple.com/) and [XRPL Labs](https://xrpl-labs.com/) for being awesome.
+* A huge thank you to [Jens Twesmann](https://twitter.com/jtwesmann) for his code contributions.
+* Thanks to the translators! ([Chronos Ananké](https://twitter.com/AnankeChronos), [Bert de Hoogh](https://twitter.com/BertdeHoogh1) and [Tarotaro](https://twitter.com/tarotaro080808))
+* Thanks to **everyone** who tests new unreleased code to help us nail bugs.
