@@ -55,7 +55,7 @@ if(!class_exists('WC_Payment_XRP')) {
          */
         public function __construct()
         {
-            // add filter to append wallet as payment gateway
+            /* add filter to append wallet as payment gateway */
             include_once('class-wcxrp-webhooks.php');
             include_once('class-wcxrp-rates.php');
             include_once('class-wcxrp-helpers.php');
@@ -63,7 +63,6 @@ if(!class_exists('WC_Payment_XRP')) {
             include_once('class-wcxrp-gateway.php');
 
             $this->helpers = new WCXRP_Helpers();
-
             $this->gateway = new WC_Gateway_XRP();
 
             add_filter(

@@ -147,7 +147,7 @@ function wc_gateway_xrp_checkout_handler()
         'xrp_total'     => $xrp_total,
         'xrp_received'  => $xrp_received,
         'xrp_remaining' => $remaining,
-        'status'        => WC_Payment_XRP::get_instance()->helpers->wc_pretty_status($status),//$gateway->helpers->wc_pretty_status($status),
+        'status'        => WC_Payment_XRP::get_instance()->helpers->wc_pretty_status($status),
         'raw_status'    => $status
     ];
 
