@@ -60,10 +60,8 @@ if(!class_exists('WC_Payment_XRP')) {
             include_once('class-wcxrp-rates.php');
             include_once('class-wcxrp-helpers.php');
             include_once('class-wcxrp-ledger.php');
-            include_once('class-wcxrp-gateway.php');
 
             $this->helpers = new WCXRP_Helpers();
-            $this->gateway = new WC_Gateway_XRP();
 
             add_filter(
                 'woocommerce_payment_gateways',
