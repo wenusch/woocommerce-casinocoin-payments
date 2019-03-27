@@ -403,18 +403,25 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
             }
             $orders[0]->update_meta_data('tx', implode(',', $txlist));
 
-            /* update the delivered_amount */
-            $delivered_amount = $orders[0]->get_meta('delivered_amount');
-            $delivered_amount += $tx->meta->delivered_amount / 1000000;
-            $orders[0]->update_meta_data('delivered_amount', $delivered_amount);
+            /* get previous payments */
+            $delivered_xrp    = (float)$orders[0]->get_meta('delivered_amount');
+            $delivered_drops  = $delivered_xrp * 1000000;
+
+            /* update current payment */
+            $delivered_drops += $tx->meta->delivered_amount;
+            $delivered_xrp    = $delivered_drops / 1000000;
+
+            /* update delivered_amount */
+            $orders[0]->update_meta_data('delivered_amount', $delivered_xrp);
             $orders[0]->save_meta_data();
 
-            $total_amount = $orders[0]->get_meta('total_amount');
+            /* check if the delivered amount is enough */
+            $total_drops = (float)$orders[0]->get_meta('total_amount') * 1000000;
 
-            if ($delivered_amount >= $total_amount) {
+            if ($delivered_drops >= $total_drops) {
                 $orders[0]->update_status(
                     'processing',
-                    __(sprintf('%s XRP received', $delivered_amount), 'wc-gateway-xrp')
+                    __(sprintf('%s XRP received', $delivered_xrp), 'wc-gateway-xrp')
                 );
                 $orders[0]->reduce_order_stock();
             }
