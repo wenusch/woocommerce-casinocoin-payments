@@ -419,9 +419,16 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
             /* check if the delivered amount is enough */
             $total_drops = (float)$orders[0]->get_meta('total_amount') * 1000000;
 
-            if ($delivered_drops >= $total_drops) {
+            if (abs($delivered_drops) == abs($total_drops)) {
                 $orders[0]->update_status(
                     'processing',
+                    __(sprintf('%s XRP received', $delivered_xrp), 'wc-gateway-xrp')
+                );
+                $orders[0]->reduce_order_stock();
+            }
+            elseif (abs($delivered_drops) > abs($total_drops)) {
+                $orders[0]->update_status(
+                    'overpaid',
                     __(sprintf('%s XRP received', $delivered_xrp), 'wc-gateway-xrp')
                 );
                 $orders[0]->reduce_order_stock();
