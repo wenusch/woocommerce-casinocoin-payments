@@ -414,7 +414,6 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
 
             /* update delivered_amount */
             $orders[0]->update_meta_data('delivered_amount', $delivered_xrp);
-            $orders[0]->save_meta_data();
 
             /* check if the delivered amount is enough */
             $total_drops = (float)$orders[0]->get_meta('total_amount') * 1000000;
@@ -425,14 +424,19 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
                     __(sprintf('%s XRP received', $delivered_xrp), 'wc-gateway-xrp')
                 );
                 $orders[0]->reduce_order_stock();
-            }
-            elseif (abs($delivered_drops) > abs($total_drops)) {
+            } elseif (abs($delivered_drops) > abs($total_drops)) {
+                $orders[0]->update_meta_data(
+                    'overpaid_amount',
+                    (abs($delivered_drops) - abs($total_drops)) / 1000000
+                );
                 $orders[0]->update_status(
                     'overpaid',
                     __(sprintf('%s XRP received', $delivered_xrp), 'wc-gateway-xrp')
                 );
                 $orders[0]->reduce_order_stock();
             }
+
+            $orders[0]->save_meta_data();
         }
 
         echo "ok";
