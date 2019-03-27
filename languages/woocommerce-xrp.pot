@@ -216,3 +216,7 @@ msgstr ""
 #: class-wcxrp-helpers.php:28
 msgid "Unknown"
 msgstr ""
+
+#: class-wcxrp-helpers.php:30
+msgid "Overpaid"
+msgstr ""
