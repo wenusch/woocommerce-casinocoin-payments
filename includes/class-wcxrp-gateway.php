@@ -353,6 +353,7 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
             (int)$this->settings['tx_limit']
         );
         if ($trans === false) {
+            header('HTTP/1.0 500 Internal Server Error', true, 500);
             echo "unable to reach the XRP ledger.";
             exit;
         }
