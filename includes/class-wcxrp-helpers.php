@@ -10,19 +10,19 @@ class WCXRP_Helpers
     function wc_pretty_status($status)
     {
         switch ($status) {
-            case 'wc-pending':
+            case 'pending':
                 return __('Pending payment', 'wc-gateway-xrp');
-            case 'wc-processing':
+            case 'processing':
                 return __('Processing (Paid)', 'wc-gateway-xrp');
-            case 'wc-on-hold':
+            case 'on-hold':
                 return __('On hold', 'wc-gateway-xrp');
-            case 'wc-completed':
+            case 'completed':
                 return __('Completed', 'wc-gateway-xrp');
-            case 'wc-cancelled':
+            case 'cancelled':
                 return __('Cancelled', 'wc-gateway-xrp');
-            case 'wc-refunded':
+            case 'refunded':
                 return __('Refunded', 'wc-gateway-xrp');
-            case 'wc-failed':
+            case 'failed':
                 return __('Failed', 'wc-gateway-xrp');
             default:
                 return __('Unknown', 'wc-gateway-xrp');
