@@ -146,7 +146,7 @@ function wc_gateway_xrp_checkout_handler()
     $status       = $order->get_status();
 
     $result = [
-        'xrp_account'   => WC_Payment_XRP::get_instance()->gateway->settings['xrp_account'],
+        'xrp_account'   => get_option('woocommerce_xrp_settings')['xrp_account'],
         'tag'           => $tag,
         'xrp_total'     => $xrp_total,
         'xrp_received'  => $xrp_received,
