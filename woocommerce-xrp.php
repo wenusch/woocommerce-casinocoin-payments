@@ -158,3 +158,50 @@ function wc_gateway_xrp_checkout_handler()
     echo json_encode($result);
     wp_die();
 }
+
+/* add new order status */
+function register_overpaid_order_status() {
+    register_post_status( 'wc-overpaid', array(
+        'label'                     => 'Overpaid',
+        'public'                    => true,
+        'exclude_from_search'       => false,
+        'show_in_admin_all_list'    => true,
+        'show_in_admin_status_list' => true,
+        'label_count'               => _n_noop( 'Overpaid','Overpaid' )
+    ) );
+}
+add_action( 'init', 'register_overpaid_order_status' );
+
+/* Add to list of WC Order statuses */
+function add_overpaid_to_order_statuses( $order_statuses ) {
+    $new_order_statuses = array();
+    // add new order status after processing
+    foreach ( $order_statuses as $key => $status ) {
+        $new_order_statuses[ $key ] = $status;
+        if ( 'wc-processing' === $key ) {
+            $new_order_statuses['wc-overpaid'] = __('Overpaid','wc-gateway-xrp');
+        }
+    }
+    return $new_order_statuses;
+}
+add_filter( 'wc_order_statuses', 'add_overpaid_to_order_statuses' );
+
+/* add color for new order status */
+add_action('admin_head', 'styling_admin_order_list' );
+function styling_admin_order_list() {
+    global $pagenow, $post;
+
+    if( $pagenow != 'edit.php') return; // Exit
+    if( get_post_type($post->ID) != 'shop_order' ) return; // Exit
+
+    // HERE we set your custom status
+    $order_status = 'Overpaid'; // <==== HERE
+    ?>
+    <style>
+        .order-status.status-<?php echo sanitize_title( $order_status ); ?> {
+            background: #d7f8a7;
+            color: #0c942b;
+        }
+    </style>
+    <?php
+}
