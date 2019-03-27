@@ -87,15 +87,19 @@ add_action('woocommerce_thankyou', 'wc_gateway_xrp_thankyou_payment_info', 10);
 add_action('woocommerce_view_order', 'wc_gateway_xrp_thankyou_payment_info', 10);
 function wc_gateway_xrp_thankyou_payment_info($order_id)
 {
-    if (get_post_meta($order_id, '_payment_method', true) !== 'xrp') {
+    $order = wc_get_order((int)$order_id);
+
+    if ($order === false || $order->get_payment_method() !== 'xrp') {
         return false;
     }
-    $total     = (float)get_post_meta($order_id, 'total_amount', true);
-    $delivered = (float)get_post_meta($order_id, 'delivered_amount', true);
+
+    $total     = (float)$order->get_meta('total_amount', true);
+    $delivered = (float)$order->get_meta('delivered_amount', true);
     $remaining = round($total - $delivered, 6);
+
     include dirname(__FILE__) . '/views/thank_you.php';
 
-    if (get_post_status($order_id) === 'wc-pending') {
+    if ($order->get_status() === 'pending') {
         wp_enqueue_script(
             'wcxrp-qrcode',
             plugins_url('/js/qrcodejs/qrcodejs.min.js', __FILE__),
@@ -115,7 +119,7 @@ function wc_gateway_xrp_thankyou_payment_info($order_id)
             'ajax_object',
             [
                 'ajax_url' => admin_url('admin-ajax.php'),
-                'order_id' => $order_id
+                'order_id' => $order->get_id()
             ]
         );
     }
@@ -128,18 +132,18 @@ add_action('wp_ajax_xrp_checkout', 'wc_gateway_xrp_checkout_handler');
 add_action('wp_ajax_nopriv_xrp_checkout', 'wc_gateway_xrp_checkout_handler');
 function wc_gateway_xrp_checkout_handler()
 {
-    $order = wc_get_order($_POST['order_id']);
+    $order = wc_get_order((int)$_POST['order_id']);
 
     if ($order === false) {
         header('HTTP/1.0 404 Not Found');
         wp_die();
     }
 
-    $tag          = get_post_meta($_POST['order_id'], 'destination_tag', true);
-    $xrp_total    = round(get_post_meta($_POST['order_id'], 'total_amount', true), 6);
-    $xrp_received = round(get_post_meta($_POST['order_id'], 'delivered_amount', true), 6);
+    $tag          = $order->get_meta('destination_tag', true);
+    $xrp_total    = round($order->get_meta('total_amount', true), 6);
+    $xrp_received = round($order->get_meta('delivered_amount', true), 6);
     $remaining    = round((float)$xrp_total - (float)$xrp_received, 6);
-    $status       = get_post_status($_POST['order_id']);
+    $status       = $order->get_status();
 
     $result = [
         'xrp_account'   => WC_Payment_XRP::get_instance()->gateway->settings['xrp_account'],

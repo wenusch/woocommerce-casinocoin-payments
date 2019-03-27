@@ -41,7 +41,7 @@ jQuery(document).ready(function($) {
 				if ($('#xrp_status').text() != data.status) {
 					$('#xrp_status').text(data.status);
 				}
-				if (data.raw_status != 'wc-pending') {
+				if (data.raw_status != 'pending') {
 					clearTimeout(pollTimer);
 					$('#wc_xrp_qrcode').empty();
 				} else if (regenqr) {
