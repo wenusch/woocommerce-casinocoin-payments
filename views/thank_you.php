@@ -4,7 +4,7 @@
     <tbody>
     <tr>
         <th><?php _e('XRP Account', 'wc-gateway-xrp'); ?></th>
-        <td id="xrp_account"><?php echo esc_html(WC_Payment_XRP::get_instance()->gateway->settings['xrp_account']) ?></td>
+        <td id="xrp_account"><?php echo esc_html(get_option('woocommerce_xrp_settings')['xrp_account']) ?></td>
     </tr>
     <tr>
         <th><?php _e('Destination tag', 'wc-gateway-xrp'); ?></th>
