@@ -24,6 +24,8 @@ class WCXRP_Helpers
                 return __('Refunded', 'wc-gateway-xrp');
             case 'failed':
                 return __('Failed', 'wc-gateway-xrp');
+            case 'overpaid':
+                return __('Overpaid', 'wc-gateway-xrp');
             default:
                 return __('Unknown', 'wc-gateway-xrp');
         }
