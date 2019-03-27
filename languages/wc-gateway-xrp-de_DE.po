@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce XRP 1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-xrp\n"
 "POT-Creation-Date: 2019-03-17T19:58:11+00:00\n"
-"PO-Revision-Date: 2019-03-22 07:14+0100\n"
+"PO-Revision-Date: 2019-03-27 15:52+0100\n"
 "Last-Translator: \n"
 "Language-Team: Jens Twesmann - j.twesmann@star-media.biz\n"
 "Language: de_DE\n"
@@ -226,34 +226,38 @@ msgstr "XRP nach zu zahlen"
 msgid "Order status"
 msgstr "Bestellstatus"
 
-#: class-wcxrp-helpers.php
+#: class-wcxrp-helpers.php:14
 msgid "Pending payment"
 msgstr "Zahlung ausstehend"
 
-#: class-wcxrp-helpers.php
+#: class-wcxrp-helpers.php:16
 msgid "Processing (Paid)"
 msgstr "In Bearbeitung (bezahlt)"
 
-#: class-wcxrp-helpers.php
+#: class-wcxrp-helpers.php:18
 msgid "On hold"
 msgstr "In Wartestellung"
 
-#: class-wcxrp-helpers.php
+#: class-wcxrp-helpers.php:20
 msgid "Completed"
 msgstr "Abgeschlossen"
 
-#: class-wcxrp-helpers.php
+#: class-wcxrp-helpers.php:22
 msgid "Cancelled"
 msgstr "Abgebrochen"
 
-#: class-wcxrp-helpers.php
+#: class-wcxrp-helpers.php:24
 msgid "Refunded"
 msgstr "Erstattet"
 
-#: class-wcxrp-helpers.php
+#: class-wcxrp-helpers.php:26
 msgid "Failed"
 msgstr "Fehlerhaft"
 
-#: class-wcxrp-helpers.php
+#: class-wcxrp-helpers.php:28
 msgid "Unknown"
 msgstr "Unbekannt"
+
+#: class-wcxrp-helpers.php:30
+msgid "Overpaid"
+msgstr "Überzahlt"
