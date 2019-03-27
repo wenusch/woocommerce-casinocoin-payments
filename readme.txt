@@ -27,9 +27,17 @@ WooCommerce XRP is a payment gateway which makes it easy to accept [XRP](https:/
 
 The node **s2.ripple.com** is being used to talk to the XRP network. This can easily be changed under *Advanced* and you can use any public XRP server.
 
+= What is XRPL Webhooks? =
+
+XRPL Webhooks is a free service that send HTTP requests to a specified URL each time a transaction is made to a specific XRP account. The plugin use this service to update the order in real-time when the customer makes a payment.
+
 = Which exchanges is supported? =
 
 You can specify between [Binance](https://www.binance.com/), [Bitbank](https://bitbank.cc/), [Bitfinex](https://www.bitfinex.com/), [Bitlish](https://bitlish.com/), [BitMEX](https://www.bitmex.com/), [Bitrue](https://www.bitrue.com/), [Bitstamp](https://www.bitstamp.net/), [Bittrex](https://www.bittrex.com), [Bitcoin Exchange Thailand](https://bx.in.th/) or [Kraken](https://www.kraken.com/) as the exchange to use when fetching the XRP rate when the customer is checking out.
+
+= Which base currencies are supported? =
+
+The supported currencies are AUD, BGN, BRL, CAD, CHF, CNY, CZK, DKK, EUR, GBP, HKD, HRK, HUF, IDR, ILS, INR, ISK, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PLN, RON, RUB, SEK, SGD, THB, TRY, USD and ZAR. The rates are updated daily using the [XML feed](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml) from [ECB](https://www.ecb.europa.eu).
 
 = What does the bypass firewall feature do? =
 
