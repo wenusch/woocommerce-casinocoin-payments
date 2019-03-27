@@ -29,11 +29,11 @@ if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get
 }
 
 /* define constants */
-define('WX_VERSION', '1.1.0');
-define('WX_TEXTDOMAIN', 'wc-gateway-xrp');
-define('WX_NAME', 'Woocommerce XRP');
-define('WX_PLUGIN_ROOT', plugin_dir_path( __FILE__));
-define('WX_PLUGIN_ABSOLUTE', __FILE__);
+define('WCXRP_VERSION', '1.1.0');
+define('WCXRP_TEXTDOMAIN', 'wc-gateway-xrp');
+define('WCXRP_NAME', 'Woocommerce XRP');
+define('WCXRP_PLUGIN_ROOT', plugin_dir_path( __FILE__));
+define('WCXRP_PLUGIN_ABSOLUTE', __FILE__);
 
 if (!function_exists('woocommerce_xrp_payment')) {
     /**
