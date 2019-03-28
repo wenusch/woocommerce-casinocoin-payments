@@ -399,4 +399,28 @@ class WCXRP_Rates
 
         return $this->to_base($rate->last, $src);
     }
+
+    /**
+     * et Exchange rate from uphold
+     * @return bool|float|int
+     */
+    private function uphold()
+    {
+        if ($this->base_currency === 'USD') {
+            $url = 'https://api.uphold.com/v0/ticker/XRPUSD';
+            $src = 'USD';
+        } else {
+            $url = 'https://api.uphold.com/v0/ticker/XRPEUR';
+            $src = 'EUR';
+        }
+        $res = wp_remote_get($url);
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
+            return false;
+        }
+        if (($rate = json_decode($res['body'])) === null) {
+            return false;
+        }
+
+        return $this->to_base($rate->ask, $src);
+    }
 }
