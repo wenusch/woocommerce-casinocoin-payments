@@ -375,4 +375,28 @@ class WCXRP_Rates
 
         return $this->to_base($rate->data->XRP_USDT->last, 'USD');
     }
+
+    /**
+     * Get Exchange rate from cexio
+     * @return bool|float|int
+     */
+    private function cexio()
+    {
+        if ($this->base_currency === 'USD') {
+            $url = 'https://cex.io/api/ticker/XRP/USD';
+            $src = 'USD';
+        } else {
+            $url = 'https://cex.io/api/ticker/XRP/EUR';
+            $src = 'EUR';
+        }
+        $res = wp_remote_get($url);
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
+            return false;
+        }
+        if (($rate = json_decode($res['body'])) === null) {
+            return false;
+        }
+
+        return $this->to_base($rate->last, $src);
+    }
 }
