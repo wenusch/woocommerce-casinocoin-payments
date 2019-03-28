@@ -38,6 +38,7 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
             'bitstamp' => 'Bitstamp',
             'bittrex'  => 'Bittrex',
             'bxinth'   => 'Bitcoin Exchange Thailand',
+            'cexio'    => 'CEX.IO',
             'kraken'   => 'Kraken'
         ];
 
