@@ -1,6 +1,6 @@
 === WooCommerce XRP ===
-Contributors: empatogen
-Donate link: rscKqdNj1ECXamMoxxwejTnBmhwTpBvTKz
+Contributors: empatogen, jetwes
+Donate link: https://ripple.com//send?to=rscKqdNj1ECXamMoxxwejTnBmhwTpBvTKz
 Tags: woo, woocommerce, xrp, gateway, cryptocurrency
 Requires at least: 5.1
 Tested up to: 5.1.1
@@ -17,7 +17,7 @@ WooCommerce XRP is a payment gateway which makes it easy to accept [XRP](https:/
 == Installation ==
 
 1. Upload the plugin to the `/wp-content/plugins/woocommerce-xrp` directory folder, or install the plugin through the WordPress plugin screen directly.
-1. Activate the plugin through the `Plugins` screen in Wordpress.
+1. Activate the plugin through the `Plugins` screen in WordPress.
 1. Create a free account at [XRPL Webhook](https://webhook.xrpayments.co) and obtain your **API keys**. This is required as the plugin uses this webhook to update the checkout page whenever a payment is made.
 1. Go to "WooCommerce -> Settings -> Payments" and configure the plugin.
 
@@ -43,7 +43,21 @@ The supported currencies are AUD, BGN, BRL, CAD, CHF, CNY, CZK, DKK, EUR, GBP, H
 
 By default, we speak [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on port 51234 with the XRP server. Some webservers are behind a firewall that doesn't allow outgoing traffic on non-standard ports. By enabling this feature, we talk to [cors-anywhere.herokuapp.com](https://cors-anywhere.herokuapp.com/), using TLS on port 443, which then acts as a proxy and relays the traffic to the XRP server.
 
+== Screenshots ==
+
+1. Plugin settings screen.
+2. Advanced options.
+3. Checkout page, waiting for payment.
+
 == Changelog ==
+
+= 1.1.1 =
+* Add new exchanges. (Bitsane, CEX.IO, Coinbase, Uphold)
+* Add missing sanitation checks for user input.
+* Add new order status (Overpaid) for when a customer pays too much.
+* Fix potential rounding error when processing payments.
+* Fix a bug where the payment gateway was loaded twice.
+* Add so the webhook try again if we're unable to talk to the XRP node.
 
 = 1.1.0 =
 * Remove the use of Google Chart to generate the QR-code. Use [qrcodejs](https://github.com/davidshimjs/qrcodejs) instead.
@@ -67,6 +81,11 @@ By default, we speak [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on 
 
 = 1.0.0 =
 * Initial release!
+
+== Upgrade notice ==
+
+= 1.1.1 =
+This version improves the overall payment processing and making it more robust. It fixes a potential rounding error when handling payments and it makes then webhook service retry multiple times if we're unable to talk to the XRP network. This version also make it easier to see when a customer pays too much, as the order will get the status "Overpaid".
 
 == Acknowledgments ==
 
