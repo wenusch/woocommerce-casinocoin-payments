@@ -33,7 +33,7 @@ XRPL Webhooks is a free service that send HTTP requests to a specified URL each 
 
 = Which exchanges is supported? =
 
-You can specify between [Binance](https://www.binance.com/), [Bitbank](https://bitbank.cc/), [Bitfinex](https://www.bitfinex.com/), [Bitlish](https://bitlish.com/), [BitMEX](https://www.bitmex.com/), [Bitrue](https://www.bitrue.com/), [Bitstamp](https://www.bitstamp.net/), [Bittrex](https://www.bittrex.com), [Bitcoin Exchange Thailand](https://bx.in.th/) or [Kraken](https://www.kraken.com/) as the exchange to use when fetching the XRP rate when the customer is checking out.
+You can specify between [Binance](https://www.binance.com/), [Bitbank](https://bitbank.cc/), [Bitfinex](https://www.bitfinex.com/), [Bitlish](https://bitlish.com/), [BitMEX](https://www.bitmex.com/), [Bitrue](https://www.bitrue.com/), [Bitsane](https://bitsane.com/), [Bitstamp](https://www.bitstamp.net/), [Bittrex](https://www.bittrex.com), [Bitcoin Exchange Thailand](https://bx.in.th/), [CEX.IO](https://cex.io/), [Coinbase](https://www.coinbase.com/), [Kraken](https://www.kraken.com/) or [Uphold](https://uphold.com/) as the exchange to use when fetching the XRP rate when the customer is checking out.
 
 = Which base currencies are supported? =
 
