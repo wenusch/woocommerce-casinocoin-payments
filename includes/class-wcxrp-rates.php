@@ -446,6 +446,33 @@ class WCXRP_Rates
         }
 
         return $this->to_base($rate->amount, $src);
+    }
 
+    /**
+     * Get Exchange rate from bitsane
+     * @return bool|float|int
+     */
+    private function bitsane()
+    {
+        if ($this->base_currency === 'USD') {
+            $url = 'https://bitsane.com/api/public/ticker?pairs=XRP_USD';
+            $src = 'USD';
+        } else {
+            $url = 'https://bitsane.com/api/public/ticker?pairs=XRP_EUR';
+            $src = 'EUR';
+        }
+        $res = wp_remote_get($url);
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
+            return false;
+        }
+        if (($rate = json_decode($res['body'])) === null) {
+            return false;
+        }
+
+        if ($src === 'USD') {
+            return $this->to_base($rate->XRP_USD->last, $src);
+        } else {
+            return $this->to_base($rate->XRP_EUR->last, $src);
+        }
     }
 }
