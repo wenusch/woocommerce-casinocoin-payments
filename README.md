@@ -41,6 +41,14 @@ By default, we speak [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on 
 
 ## Changelog
 
+### 1.1.1
+* Add new exchanges. (Bitsane, CEX.IO, Coinbase, Uphold)
+* Add missing sanitation checks for user input.
+* Add new order status (Overpaid) for when a customer pays too much.
+* Fix potential rounding error when processing payments.
+* Fix a bug where the payment gateway was loaded twice.
+* Add so the webhook try again if we're unable to talk to the XRP node.
+
 ### 1.1.0
 * Remove the use of Google Chart to generate the QR-code. Use [qrcodejs](https://github.com/davidshimjs/qrcodejs) instead.
 * Change to a singleton layout to avoid conflicting with other plugins.
