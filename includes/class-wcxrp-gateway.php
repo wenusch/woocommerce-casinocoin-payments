@@ -41,6 +41,7 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
             'bxinth'   => 'Bitcoin Exchange Thailand',
             'cexio'    => 'CEX.IO',
             'coinbase' => 'Coinbase',
+            'dex'      => 'XRPL DEX',
             'kraken'   => 'Kraken',
             'uphold'   => 'Uphold'
         ];
@@ -292,9 +293,18 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
     {
         $order = wc_get_order($order_id);
 
+        $ledger = new WCXRP_Ledger(
+            $this->settings['xrp_node'],
+            $this->settings['xrp_bypass']
+        );
+
         /* specify where to obtain our rates from. */
-        $rates = new WCXRP_Rates($order->get_currency());
-        $rate  = $rates->get_rate(
+        $rates = new WCXRP_Rates(
+            $ledger,
+            $this->settings['xrp_account'],
+            $order->get_currency()
+        );
+        $rate = $rates->get_rate(
             $this->settings['exchange'],
             $this->exchanges
         );

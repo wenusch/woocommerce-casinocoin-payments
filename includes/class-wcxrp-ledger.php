@@ -83,4 +83,50 @@ class WCXRP_Ledger
 
         return $data->result;
     }
+
+    public function book_offers($account, $currency)
+    {
+        $taker_pays['currency'] = $currency;
+        if ($currency === 'USD') {
+            $taker_pays['issuer'] = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
+        } elseif ($currency === 'EUR') {
+            $taker_pays['issuer'] = 'rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq';
+        } else {
+            return false;
+        }
+
+        $payload = json_encode([
+            'method' => 'book_offers',
+            'params' => [[
+                'taker' => $account,
+                "taker_gets" => [
+                    "currency" => "XRP"
+                ],
+                "taker_pays" => $taker_pays,
+                "limit" => 50
+            ]]
+        ]);
+
+        $res = wp_remote_post($this->node, [
+            'body' => $payload,
+            'headers' => $this->headers
+        ]);
+        if (is_wp_error($res) || $res['response']['code'] !== 200) {
+            return false;
+        }
+        if (($data = json_decode($res['body'])) === null) {
+            return false;
+        }
+
+        foreach ($data->result->offers as $offer) {
+            if (!isset($offer->owner_funds)) {
+                continue;
+            }
+
+            $rate = $offer;
+            break;
+        }
+
+        return $rate->TakerPays->value / ($rate->TakerGets / 1000000);
+    }
 }
