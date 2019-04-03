@@ -91,9 +91,6 @@ By default, we speak [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on 
 = 1.1.2 =
 This version prevents certain themes from breaking the XRP address on the checkout page. It also adds the decentralized exchange that lives on the XRP Ledger.
 
-= 1.1.1 =
-This version improves the overall payment processing and making it more robust. It fixes a potential rounding error when handling payments and it makes then webhook service retry multiple times if we're unable to talk to the XRP network. This version also make it easier to see when a customer pays too much, as the order will get the status "Overpaid".
-
 == Acknowledgments ==
 
 * A huge thank you to both [Ripple](https://ripple.com/) and [XRPL Labs](https://xrpl-labs.com/) for being awesome.
