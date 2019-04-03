@@ -3,13 +3,20 @@
 class WCXRP_Rates
 {
     private $ecb_cache = 'woo_ecb_rates.xml';
+    private $ledger = false;
+    private $account = false;
+    private $base_currency = false;
 
     /**
      * Rates constructor.
+     * @param $ledger
+     * @param $account
      * @param $base_currency
      */
-    public function __construct($base_currency)
+    public function __construct($ledger, $account, $base_currency)
     {
+        $this->ledger = $ledger;
+        $this->account = trim($account);
         $this->base_currency = strtoupper($base_currency);
     }
 
@@ -474,5 +481,28 @@ class WCXRP_Rates
         } else {
             return $this->to_base($rate->XRP_EUR->last, $src);
         }
+    }
+
+    /**
+     * Get Exchange rate from dex
+     * @return bool|float|int
+     */
+    private function dex()
+    {
+        $src = 'EUR';
+
+        if ($this->base_currency === 'USD') {
+            $src = 'USD';
+        }
+        $rate = $this->ledger->book_offers(
+            $this->account,
+            $src
+        );
+
+        if ($rate === false) {
+            return false;
+        }
+
+        return $this->to_base($rate, $src);
     }
 }
