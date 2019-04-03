@@ -29,7 +29,7 @@ XRPL Webhooks is a free service that send HTTP requests to a specified URL each 
 
 ### Which exchanges is supported?
 
-You can specify between [Binance](https://www.binance.com/), [Bitbank](https://bitbank.cc/), [Bitfinex](https://www.bitfinex.com/), [Bitlish](https://bitlish.com/), [BitMEX](https://www.bitmex.com/), [Bitrue](https://www.bitrue.com/), [Bitsane](https://bitsane.com/), [Bitstamp](https://www.bitstamp.net/), [Bittrex](https://www.bittrex.com), [Bitcoin Exchange Thailand](https://bx.in.th/), [CEX.IO](https://cex.io/), [Coinbase](https://www.coinbase.com/), [Kraken](https://www.kraken.com/) or [Uphold](https://uphold.com/) as the exchange to use when fetching the XRP rate when the customer is checking out.
+You can use the [decentralized exchange (DEX)](https://developers.ripple.com/decentralized-exchange.html) on the XRP Ledger, [Binance](https://www.binance.com/), [Bitbank](https://bitbank.cc/), [Bitfinex](https://www.bitfinex.com/), [Bitlish](https://bitlish.com/), [BitMEX](https://www.bitmex.com/), [Bitrue](https://www.bitrue.com/), [Bitsane](https://bitsane.com/), [Bitstamp](https://www.bitstamp.net/), [Bittrex](https://www.bittrex.com), [Bitcoin Exchange Thailand](https://bx.in.th/), [CEX.IO](https://cex.io/), [Coinbase](https://www.coinbase.com/), [Kraken](https://www.kraken.com/) or [Uphold](https://uphold.com/) as the exchange to get the XRP rate when your customer is checking out.
 
 ### Which base currencies are supported?
 
@@ -40,6 +40,10 @@ The supported currencies are AUD, BGN, BRL, CAD, CHF, CNY, CZK, DKK, EUR, GBP, H
 By default, we speak [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on port 51234 with the XRP server. Some webservers are behind a firewall that doesn't allow outgoing traffic on non-standard ports. By enabling this feature, we talk to [cors-anywhere.herokuapp.com](https://cors-anywhere.herokuapp.com/), using TLS on port 443, which then acts as a proxy and relays the traffic to the XRP server.
 
 ## Changelog
+
+### 1.1.2
+* Add the decentralized exchange. (DEX)
+* Fix the text style on the checkout page.
 
 ### 1.1.1
 * Add new exchanges. (Bitsane, CEX.IO, Coinbase, Uphold)

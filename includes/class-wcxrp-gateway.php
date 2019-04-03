@@ -6,7 +6,7 @@
  *
  * @class       WC_Gateway_XRP
  * @extends     WC_Payment_Gateway
- * @version     1.1.0
+ * @version     1.1.2
  * @package     WooCommerce/Classes/Payment
  * @author      Jesper Wallin
  */

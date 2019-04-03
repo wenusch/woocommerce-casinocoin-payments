@@ -33,7 +33,7 @@ XRPL Webhooks is a free service that send HTTP requests to a specified URL each 
 
 = Which exchanges is supported? =
 
-You can specify between [Binance](https://www.binance.com/), [Bitbank](https://bitbank.cc/), [Bitfinex](https://www.bitfinex.com/), [Bitlish](https://bitlish.com/), [BitMEX](https://www.bitmex.com/), [Bitrue](https://www.bitrue.com/), [Bitsane](https://bitsane.com/), [Bitstamp](https://www.bitstamp.net/), [Bittrex](https://www.bittrex.com), [Bitcoin Exchange Thailand](https://bx.in.th/), [CEX.IO](https://cex.io/), [Coinbase](https://www.coinbase.com/), [Kraken](https://www.kraken.com/) or [Uphold](https://uphold.com/) as the exchange to use when fetching the XRP rate when the customer is checking out.
+You can use the [decentralized exchange (DEX)](https://developers.ripple.com/decentralized-exchange.html) on the XRP Ledger, [Binance](https://www.binance.com/), [Bitbank](https://bitbank.cc/), [Bitfinex](https://www.bitfinex.com/), [Bitlish](https://bitlish.com/), [BitMEX](https://www.bitmex.com/), [Bitrue](https://www.bitrue.com/), [Bitsane](https://bitsane.com/), [Bitstamp](https://www.bitstamp.net/), [Bittrex](https://www.bittrex.com), [Bitcoin Exchange Thailand](https://bx.in.th/), [CEX.IO](https://cex.io/), [Coinbase](https://www.coinbase.com/), [Kraken](https://www.kraken.com/) or [Uphold](https://uphold.com/) as the exchange to get the XRP rate when your customer is checking out.
 
 = Which base currencies are supported? =
 
@@ -50,6 +50,10 @@ By default, we speak [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on 
 3. Checkout page, waiting for payment.
 
 == Changelog ==
+
+= 1.1.2 =
+* Add the decentralized exchange. (DEX)
+* Fix the text style on the checkout page.
 
 = 1.1.1 =
 * Add new exchanges. (Bitsane, CEX.IO, Coinbase, Uphold)
@@ -83,6 +87,9 @@ By default, we speak [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on 
 * Initial release!
 
 == Upgrade notice ==
+
+= 1.1.2 =
+This version prevents certain themes from breaking the XRP address on the checkout page. It also adds the decentralized exchange that lives on the XRP Ledger.
 
 = 1.1.1 =
 This version improves the overall payment processing and making it more robust. It fixes a potential rounding error when handling payments and it makes then webhook service retry multiple times if we're unable to talk to the XRP network. This version also make it easier to see when a customer pays too much, as the order will get the status "Overpaid".
