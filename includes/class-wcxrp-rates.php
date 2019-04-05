@@ -144,6 +144,11 @@ class WCXRP_Rates
      */
     public function get_rate($exchange, array $exchanges)
     {
+        /* don't bother if we're using XRP as base currency */
+        if ($this->base_currency === 'XRP') {
+            return 1;
+        }
+
         /* call the rate dynamically if it's in the exchanges list */
         if (isset($exchanges[$exchange]) &&
         method_exists(get_class($this), $exchange)) {
