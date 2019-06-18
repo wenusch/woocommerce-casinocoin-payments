@@ -1,16 +1,16 @@
 <?php
 /**
- * XRP Payment Gateway
+ * CSC Payment Gateway
  *
- * Provides an Payment Gateway to accept payments using XRP.
+ * Provides an Payment Gateway to accept payments using CSC.
  *
- * @class       WC_Gateway_XRP
+ * @class       WC_Gateway_CSC
  * @extends     WC_Payment_Gateway
  * @version     1.1.2
  * @package     WooCommerce/Classes/Payment
  * @author      Jesper Wallin
  */
-class WC_Gateway_XRP extends \WC_Payment_Gateway
+class WC_Gateway_CSC extends \WC_Payment_Gateway
 {
     public $helpers;
     protected $exchanges;
@@ -18,32 +18,22 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
 
     public function __construct()
     {
-        $this->id                 = 'xrp';
+        $this->id                 = 'csc';
         $this->has_fields         = false;
-        $this->method_title       = __('XRP', 'wc-gateway-xrp');
-        $this->method_description = __('Let your customers pay using the XRP Ledger.', 'wc-gateway-xrp');
+        $this->method_title       = __('CasinoCoin', 'wc-gateway-csc');
+        $this->method_description = __('Let your customers pay using the CSC Ledger.', 'wc-gateway-csc');
 
         $this->init_settings();
 
-        $this->helpers = new WCXRP_Helpers();
+        $this->helpers = new WCCSC_Helpers();
 
         /* supported exchanges */
         $this->exchanges = [
-            'binance'  => 'Binance',
-            'bitbank'  => 'Bitbank',
-            'bitfinex' => 'Bitfinex',
-            'bitlish'  => 'Bitlish',
-            'bitmex'   => 'BitMEX',
-            'bitrue'   => 'Bitrue',
-            'bitsane'  => 'Bitsane',
-            'bitstamp' => 'Bitstamp',
-            'bittrex'  => 'Bittrex',
-            'bxinth'   => 'Bitcoin Exchange Thailand',
-            'cexio'    => 'CEX.IO',
-            'coinbase' => 'Coinbase',
-            'dex'      => 'XRPL DEX',
-            'kraken'   => 'Kraken',
-            'uphold'   => 'Uphold'
+//            'nlexch'  => 'NLExch.com',
+//            'nuex'  => 'nuex.com',
+            'bitrue'  => 'bitrue.com',
+//            'stex'  => 'stex.com',
+
         ];
 
         /* supported currencies */
@@ -51,7 +41,7 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
             'USD','JPY','BGN','CZK','DKK','GBP','HUF','PLN','RON','SEK',
             'CHF','ISK','NOK','HRK','RUB','TRY','AUD','BRL','CAD','CNY',
             'HKD','IDR','ILS','INR','KRW','MXN','MYR','NZD','PHP','SGD',
-            'THB','ZAR','EUR','XRP'
+            'THB','ZAR','EUR','CSC'
         ];
 
         /* sort the exchanges alphabetically */
@@ -59,25 +49,25 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
 
         $this->title                 = $this->settings['title'];
         $this->description           = $this->settings['description'];
-        $this->xrp_account           = $this->settings['xrp_account'];
-        $this->xrpl_webhook_api_pub  = $this->settings['xrpl_webhook_api_pub'];
-        $this->xrpl_webhook_api_priv = $this->settings['xrpl_webhook_api_priv'];
-        $this->xrp_node              = $this->settings['xrp_node'];
+        $this->csc_account           = $this->settings['csc_account'];
+        $this->cscl_webhook_api_pub  = $this->settings['cscl_webhook_api_pub'];
+        $this->cscl_webhook_api_priv = $this->settings['cscl_webhook_api_priv'];
+        $this->csc_node              = $this->settings['csc_node'];
         $this->tx_limit              = $this->settings['tx_limit'];
 
-        add_action('woocommerce_api_wc_gateway_xrp', [$this, 'check_ledger']);
+        add_action('woocommerce_api_wc_gateway_csc', [$this, 'check_ledger']);
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
 
         if (!is_admin()) {
             return true;
         }
 
-        if (empty($this->settings['xrp_account']) ||
-        empty($this->settings['xrpl_webhook_api_pub']) ||
-        empty($this->settings['xrpl_webhook_api_priv'])) {
-            add_action('admin_notices', [$this, 'require_xrp']);
+        if (empty($this->settings['csc_account']) ||
+        empty($this->settings['cscl_webhook_api_pub']) ||
+        empty($this->settings['cscl_webhook_api_priv'])) {
+            add_action('admin_notices', [$this, 'require_csc']);
         } elseif ($this->check_webhooks() === false) {
-            add_action('admin_notices', [$this, 'invalid_xrp']);
+            add_action('admin_notices', [$this, 'invalid_csc']);
         }
 
         if (!in_array(get_woocommerce_currency(), $this->currencies)) {
@@ -92,23 +82,23 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
     */
     public function supported_currencies()
     {
-        _e('<div class="notice notice-error"><p><b>WooCommerce XRP</b> does not support the <b>currency</b> your shop is using.</p></div>', 'wc-gateway-xrp');
+        _e('<div class="notice notice-error"><p><b>WooCommerce CasinonCion Payments</b> does not support the <b>currency</b> your shop is using.</p></div>', 'wc-gateway-csc');
     }
 
     /**
-    * Display an error that all XRP related data is required.
+    * Display an error that all CSC related data is required.
     */
-    public function require_xrp()
+    public function require_csc()
     {
-        _e('<div class="notice notice-error"><p><b>WooCommerce XRP</b> requires you to specify a <b>XRP Account</b> and your <b>XRPL Webhook</b> details.</p></div>', 'wc-gateway-xrp');
+        _e('<div class="notice notice-error"><p><b>WooCommerce CasinonCion Payments</b> requires you to specify a <b>CSC Account</b> and your <b>CSCL Webhook</b> details.</p></div>', 'wc-gateway-csc');
     }
 
     /**
-    * Display an error that the XRP details is invalid.
+    * Display an error that the CSC details is invalid.
     */
-    public function invalid_xrp()
+    public function invalid_csc()
     {
-        _e('<div class="notice notice-error"><p>The specified <b>XRP Account</b> and/or <b>XRPL Webhook</b> details are invalid. Please correct these for <b>WooCommerce XRP</b> to work properly.</p></div>', 'wc-gateway-xrp');
+        _e('<div class="notice notice-error"><p>The specified <b>CSC Account</b> and/or <b>CSCL Webhook</b> details are invalid. Please correct these for <b>WooCommerce CasinonCion Payments</b> to work properly.</p></div>', 'wc-gateway-csc');
     }
 
     /**
@@ -127,21 +117,21 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
     */
     public function check_webhooks()
     {
-        if (empty($this->settings['xrpl_webhook_api_pub']) ||
-        empty($this->settings['xrpl_webhook_api_priv'])) {
+        if (empty($this->settings['cscl_webhook_api_pub']) ||
+        empty($this->settings['cscl_webhook_api_priv'])) {
             return false;
         }
 
-        $wh = new WCXRP_Webhook(
-            $this->settings['xrpl_webhook_api_pub'],
-            $this->settings['xrpl_webhook_api_priv']
+        $wh = new WCCSC_Webhook(
+            $this->settings['cscl_webhook_api_pub'],
+            $this->settings['cscl_webhook_api_priv']
         );
 
         /* webhooks */
         if (($hooks = $wh->webhooks()) === false) {
             return false;
         }
-        $url = WC()->api_request_url('WC_Gateway_XRP');
+        $url = WC()->api_request_url('WC_Gateway_CSC');
         $exists = false;
         foreach ($hooks as $hook) {
             if ($hook->url === $url) {
@@ -159,22 +149,22 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
         }
         $exists = false;
         foreach ($subs as $sub) {
-            if ($sub->address === $this->settings['xrp_account']) {
+            if ($sub->address === $this->settings['csc_account']) {
                 $exists = true;
                 break;
             }
         }
         if ($exists === false &&
-        $wh->add_subscription($this->settings['xrp_account']) === false) {
+        $wh->add_subscription($this->settings['csc_account']) === false) {
             return false;
         }
 
-        /* make sure the xrp is activated */
-        $ledger = new WCXRP_Ledger(
-            $this->settings['xrp_node'],
-            $this->settings['xrp_bypass']
+        /* make sure the csc is activated */
+        $ledger = new WCCSC_Ledger(
+            $this->settings['csc_node'],
+            $this->settings['csc_bypass']
         );
-        $trans = $ledger->account_info($this->settings['xrp_account']);
+        $trans = $ledger->account_info($this->settings['csc_account']);
 
         if ($trans->status === 'error') {
             return false;
@@ -184,11 +174,11 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
     }
 
     /**
-    * Return our XRP account.
+    * Return our CSC account.
     */
-    public function get_xrp_account()
+    public function get_csc_account()
     {
-        return $this->xrp_account;
+        return $this->csc_account;
     }
 
     /**
@@ -196,91 +186,91 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
     */
     public function init_form_fields() {
 
-        $this->form_fields = apply_filters('wc_xrp_form_fields', [
+        $this->form_fields = apply_filters('wc_csc_form_fields', [
             'enabled' => [
-                'title'   => __('Enable/Disable', 'wc-gateway-xrp'),
+                'title'   => __('Enable/Disable', 'wc-gateway-csc'),
                 'type'    => 'checkbox',
-                'label'   => __('Enable XRP Payments', 'wc-gateway-xrp'),
+                'label'   => __('Enable CSC Payments', 'wc-gateway-csc'),
                 'default' => 'no'
             ],
             'title' => [
-                'title'       => __('Title', 'wc-gateway-xrp'),
+                'title'       => __('Title', 'wc-gateway-csc'),
                 'type'        => 'text',
-                'description' => __('This controls the title for the payment method the customer sees during checkout.', 'wc-gateway-xrp'),
-                'default'     => __('XRP', 'wc-gateway-xrp'),
+                'description' => __('This controls the title for the payment method the customer sees during checkout.', 'wc-gateway-csc'),
+                'default'     => __('CasinoCoin', 'wc-gateway-csc'),
                 'desc_tip'    => true
             ],
             'description' => [
-                'title'       => __('Description', 'wc-gateway-xrp'),
+                'title'       => __('Description', 'wc-gateway-csc'),
                 'type'        => 'textarea',
-                'description' => __('Payment method description that the customer will see on your checkout.', 'wc-gateway-xrp'),
-                'default'     => __('Payment instruction will be shown once you\'ve placed your order.', 'wc-gateway-xrp'),
+                'description' => __('Payment method description that the customer will see on your checkout.', 'wc-gateway-csc'),
+                'default'     => __('Payment instruction will be shown once you\'ve placed your order.', 'wc-gateway-csc'),
                 'desc_tip'    => true
             ],
-            'xrp' => [
-                'title'       => __('XRP Account', 'wc-gateway-xrp'),
+            'csc' => [
+                'title'       => __('CSC Account', 'wc-gateway-csc'),
                 'type'        => 'title',
-                'description' => __('Please specify the XRP Ledger account where your payments should be sent. This should be an account <b>YOU</b> own and should <b>NOT</b> be an exchange account, since a unique destination tag is generated for each order.', 'wc-gateway-xrp')
+                'description' => __('Please specify the CSC Ledger account where your payments should be sent. This should be an account <b>YOU</b> own and should <b>NOT</b> be an exchange account, since a unique destination tag is generated for each order.', 'wc-gateway-csc')
             ],
-            'xrp_account' => [
-                'title'       => __('XRP Account', 'wc-gateway-xrp'),
+            'csc_account' => [
+                'title'       => __('CSC Account', 'wc-gateway-csc'),
                 'type'        => 'text',
-                'description' => __('Your XRP account where payments should be sent.', 'wc-gateway-xrp'),
+                'description' => __('Your CSC account where payments should be sent.', 'wc-gateway-csc'),
                 'default'     => '',
                 'desc_tip'    => true
             ],
-            'xrpl_webhook' => [
-                'title'       => __('XRPL Webhook options', 'wc-gateway-xrp'),
+            'cscl_webhook' => [
+                'title'       => __('CSCL Webhook options', 'wc-gateway-csc'),
                 'type'        => 'title',
-                'description' => __('In order to create your webhook and process your payments properly, please specify your XRPL Webhooks API key. For more informations how to obtain these keys, please visit <a href="https://webhook.xrpayments.co/">https://webhook.xrpayments.co</a>.', 'wc-gateway-xrp')
+                'description' => __('In order to create your webhook and process your payments properly, please specify your CSCL Webhooks API key. For more informations how to obtain these keys, please visit <a href="https://webhook.cscayments.co/">https://webhook.cscayments.co</a>.', 'wc-gateway-csc')
             ],
-            'xrpl_webhook_api_pub' => [
-                'title'       => __('API Key', 'wc-gateway-xrp'),
+            'cscl_webhook_api_pub' => [
+                'title'       => __('API Key', 'wc-gateway-csc'),
                 'type'        => 'text',
-                'description' => __('Your XRPL XRPayments Webhook API key.', 'wc-gateway-xrp'),
+                'description' => __('Your CSCL CSCayments Webhook API key.', 'wc-gateway-csc'),
                 'default'     => '',
                 'desc_tip'    => true
             ],
-            'xrpl_webhook_api_priv' => [
-                'title'       => __('API Secret', 'wc-gateway-xrp'),
+            'cscl_webhook_api_priv' => [
+                'title'       => __('API Secret', 'wc-gateway-csc'),
                 'type'        => 'text',
-                'description' => __('Your XRPL XRPayments Webhook API secret.', 'wc-gateway-xrp'),
+                'description' => __('Your CSCL CSCayments Webhook API secret.', 'wc-gateway-csc'),
                 'default'     => '',
                 'desc_tip'    => true
             ],
             'advanced' => [
-                'title'       => __('Advanced', 'wc-gateway-xrp'),
+                'title'       => __('Advanced', 'wc-gateway-csc'),
                 'type'        => 'title',
-                'description' => __('Leave these untouched unless you really know what you\'re doing.', 'wc-gateway-xrp')
+                'description' => __('Leave these untouched unless you really know what you\'re doing.', 'wc-gateway-csc')
             ],
-            'xrp_node' => [
-                'title'       => __('XRP Node', 'wc-gateway-xrp'),
+            'csc_node' => [
+                'title'       => __('CSC Node', 'wc-gateway-csc'),
                 'type'        => 'text',
-                'description' => __('Which XRP node to use when checking our balance.', 'wc-gateway-xrp'),
-                'default'     => 'https://s2.ripple.com:51234',
-                'placeholder' => 'https://s2.ripple.com:51234',
+                'description' => __('Which CSC node to use when checking our balance.', 'wc-gateway-csc'),
+                'default'     => 'https://csc-node-de-a.casinocoin.eu:5005',
+                'placeholder' => 'https://csc-node-de-a.casinocoin.eu:5005',
                 'desc_tip'    => true
             ],
-            'xrp_bypass' => [
-                'title'       => __('Bypass firewall', 'wc-gateway-xrp'),
+            'csc_bypass' => [
+                'title'       => __('Bypass firewall', 'wc-gateway-csc'),
                 'type'        => 'checkbox',
-                'label'       => __('Use a proxy to bypass your webservers firewall.', 'wc-gateway-xrp'),
+                'label'       => __('Use a proxy to bypass your webservers firewall.', 'wc-gateway-csc'),
                 'description' => 'This is useful if your webserver does not allow outbound traffic on non-standard ports.',
                 'default'     => 'no',
                 'desc_tip'    => true
             ],
             'exchange' => [
-                'title'       => __('Exchange', 'wc-gateway-xrp'),
+                'title'       => __('Exchange', 'wc-gateway-csc'),
                 'type'        => 'select',
-                'description' => __('Which exchange to use when fetching the XRP rate.', 'wc-gateway-xrp'),
+                'description' => __('Which exchange to use when fetching the CSC rate.', 'wc-gateway-csc'),
                 'options'     => $this->exchanges,
-                'default'     => 'bitstamp',
+                'default'     => 'bitrue',
                 'desc_tip'    => true
             ],
             'tx_limit' => [
-                'title'       => __('Transaction Limit', 'wc-gateway-xrp'),
+                'title'       => __('Transaction Limit', 'wc-gateway-csc'),
                 'type'        => 'number',
-                'description' => __('The number of transactions to fetch from the ledger each time we check for new payments.', 'wc-gateway-xrp'),
+                'description' => __('The number of transactions to fetch from the ledger each time we check for new payments.', 'wc-gateway-csc'),
                 'default'     => 10,
                 'desc_tip'    => true
             ]
@@ -288,21 +278,21 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
     }
 
     /**
-    * Process the order and calculate the price in XRP.
+    * Process the order and calculate the price in CSC.
     */
     public function process_payment($order_id)
     {
         $order = wc_get_order($order_id);
 
-        $ledger = new WCXRP_Ledger(
-            $this->settings['xrp_node'],
-            $this->settings['xrp_bypass']
+        $ledger = new WCCSC_Ledger(
+            $this->settings['csc_node'],
+            $this->settings['csc_bypass']
         );
 
         /* specify where to obtain our rates from. */
-        $rates = new WCXRP_Rates(
+        $rates = new WCCSC_Rates(
             $ledger,
-            $this->settings['xrp_account'],
+            $this->settings['csc_account'],
             $order->get_currency()
         );
         $rate = $rates->get_rate(
@@ -314,8 +304,8 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
             return false;
         }
 
-        /* round to our advantage with 6 decimals */
-        $xrp = round(ceil(($order->get_total() / $rate) * 1000000) / 1000000, 6);
+        /* round to our advantage with 8 decimals */
+        $csc = round(ceil(($order->get_total() / $rate) * 100000000) / 100000000, 8);
 
         /* check if php is 32bit or 64bit */
         if (PHP_INT_SIZE === 4) {
@@ -340,10 +330,10 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
             return false;
         }
 
-        $order->add_meta_data('total_amount', $xrp);
+        $order->add_meta_data('total_amount', $csc);
         $order->add_meta_data('destination_tag', $tag);
         $order->add_meta_data('delivered_amount', '0');
-        $order->add_meta_data('xrp_rate', $rate);
+        $order->add_meta_data('csc_rate', $rate);
         $order->save_meta_data();
 
         WC()->cart->empty_cart();
@@ -359,19 +349,21 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
     */
     public function check_ledger()
     {
-        $ledger = new WCXRP_Ledger(
-            $this->settings['xrp_node'],
-            $this->settings['xrp_bypass']
+        $ledger = new WCCSC_Ledger(
+            $this->settings['csc_node'],
+            $this->settings['csc_bypass']
         );
         $trans = $ledger->account_tx(
-            $this->settings['xrp_account'],
+            $this->settings['csc_account'],
             (int)$this->settings['tx_limit']
         );
         if ($trans === false) {
             header('HTTP/1.0 500 Internal Server Error', true, 500);
-            echo "unable to reach the XRP ledger.";
+            echo "unable to reach the CSC ledger.";
             exit;
         }
+
+        $dropsToCsc = 100000000;
 
         foreach ($trans as $tx) {
             /* only care for payment transactions */
@@ -380,7 +372,7 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
             }
 
             /* only care for inbound transactions */
-            if ($tx->tx->Destination !== $this->settings['xrp_account']) {
+            if ($tx->tx->Destination !== $this->settings['csc_account']) {
                 continue;
             }
 
@@ -420,33 +412,33 @@ class WC_Gateway_XRP extends \WC_Payment_Gateway
             $orders[0]->update_meta_data('tx', implode(',', $txlist));
 
             /* get previous payments */
-            $delivered_xrp    = (float)$orders[0]->get_meta('delivered_amount');
-            $delivered_drops  = $delivered_xrp * 1000000;
+            $delivered_csc    = (float)$orders[0]->get_meta('delivered_amount');
+            $delivered_drops  = $delivered_csc * $dropsToCsc;
 
             /* update current payment */
             $delivered_drops += $tx->meta->delivered_amount;
-            $delivered_xrp    = $delivered_drops / 1000000;
+            $delivered_csc    = $delivered_drops / $dropsToCsc;
 
             /* update delivered_amount */
-            $orders[0]->update_meta_data('delivered_amount', $delivered_xrp);
+            $orders[0]->update_meta_data('delivered_amount', $delivered_csc);
 
             /* check if the delivered amount is enough */
-            $total_drops = (float)$orders[0]->get_meta('total_amount') * 1000000;
+            $total_drops = (float)$orders[0]->get_meta('total_amount') * $dropsToCsc;
 
             if (abs($delivered_drops) == abs($total_drops)) {
                 $orders[0]->update_status(
                     'processing',
-                    __(sprintf('%s XRP received', $delivered_xrp), 'wc-gateway-xrp')
+                    __(sprintf('%s CSC received', $delivered_csc), 'wc-gateway-csc')
                 );
                 $orders[0]->reduce_order_stock();
             } elseif (abs($delivered_drops) > abs($total_drops)) {
                 $orders[0]->update_meta_data(
                     'overpaid_amount',
-                    (abs($delivered_drops) - abs($total_drops)) / 1000000
+                    (abs($delivered_drops) - abs($total_drops)) / $dropsToCsc
                 );
                 $orders[0]->update_status(
                     'overpaid',
-                    __(sprintf('%s XRP received', $delivered_xrp), 'wc-gateway-xrp')
+                    __(sprintf('%s CSC received', $delivered_csc), 'wc-gateway-csc')
                 );
                 $orders[0]->reduce_order_stock();
             }

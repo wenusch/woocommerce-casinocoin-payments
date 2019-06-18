@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: WooCommerce XRP
- * Plugin URI: http://github.com/empatogen/woocommerce-xrp
- * Description: A payment gateway for WooCommerce to accept <a href="https://ripple.com/xrp">XRP</a> payments.
- * Version: 1.1.2
+ * Plugin Name: WooCommerce CasinoCoin Payments
+ * Plugin URI: https://github.com/wenusch/woocommerce-casinocoin-payments
+ * Description: A payment gateway for WooCommerce to accept <a href="https://casinocoin.org/">CasinoCoin</a> payments.
+ * Version: 1.0.0
  * Author: Jesper Wallin
  * Author URI: https://ifconfig.se/
- * Developer: Jesper Wallin
- * Developer URI: https://ifconfig.se/
- * Text Domain: wc-gateway-xrp
+ * Developer: Massimo Wenusch
+ * Developer URI: https://github.com/wenusch
+ * Text Domain: wc-gateway-csc
  * Domain Path: /languages/
  *
  * WC requires at least: 3.5.6
@@ -29,46 +29,46 @@ if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get
 }
 
 /* define constants */
-define('WCXRP_VERSION', '1.1.2');
-define('WCXRP_TEXTDOMAIN', 'wc-gateway-xrp');
-define('WCXRP_NAME', 'Woocommerce XRP');
-define('WCXRP_PLUGIN_ROOT', plugin_dir_path(__FILE__));
-define('WCXRP_PLUGIN_ABSOLUTE', __FILE__);
+define('WCCSC_VERSION', '1.0.0');
+define('WCCSC_TEXTDOMAIN', 'wc-gateway-csc');
+define('WCCSC_NAME', 'WooCommerce CasinoCoin Payments');
+define('WCCSC_PLUGIN_ROOT', plugin_dir_path(__FILE__));
+define('WCCSC_PLUGIN_ABSOLUTE', __FILE__);
 
-if (!function_exists('woocommerce_xrp_payment')) {
+if (!function_exists('woocommerce_csc_payment')) {
     /**
-     * Unique access to instance of WC_Payment_XRP class
+     * Unique access to instance of WC_Payment_CSC class
      *
-     * @return \WC_Payment_XRP
+     * @return \WC_Payment_CSC
      */
-    function woocommerce_xrp_payment()
+    function woocommerce_csc_payment()
     {
         // Load required classes and functions
-        include_once dirname(__FILE__) . '/includes/class-wcxrp-base.php';
-        return WC_Payment_XRP::get_instance();
+        include_once dirname(__FILE__) . '/includes/class-wccsc-base.php';
+        return WC_Payment_CSC::get_instance();
     }
 }
-if (!function_exists('wc_gateway_xrp_constructor')) {
-    function wc_gateway_xrp_constructor()
+if (!function_exists('wc_gateway_csc_constructor')) {
+    function wc_gateway_csc_constructor()
     {
         /**
          * Load translations.
          */
         load_plugin_textdomain(
-            'wc-gateway-xrp',
+            'wc-gateway-csc',
             false,
             dirname(plugin_basename(__FILE__)) . '/languages/'
         );
-        woocommerce_xrp_payment();
+        woocommerce_csc_payment();
     }
 }
-add_action('plugins_loaded', 'wc_gateway_xrp_constructor');
+add_action('plugins_loaded', 'wc_gateway_csc_constructor');
 
 /**
  * Add custom meta_query so we can search by destination_tag.
  */
-add_filter('woocommerce_order_data_store_cpt_get_orders_query', 'wc_gateway_xrp_destination_tag_query', 10, 2);
-function wc_gateway_xrp_destination_tag_query($query, $query_vars)
+add_filter('woocommerce_order_data_store_cpt_get_orders_query', 'wc_gateway_csc_destination_tag_query', 10, 2);
+function wc_gateway_csc_destination_tag_query($query, $query_vars)
 {
     if (!empty($query_vars['destination_tag'])) {
         $query['meta_query'][] = [
@@ -83,13 +83,13 @@ function wc_gateway_xrp_destination_tag_query($query, $query_vars)
 /*
  * Customize the "thank you" page in order to display payment info.
  */
-add_action('woocommerce_thankyou', 'wc_gateway_xrp_thankyou_payment_info', 10);
-add_action('woocommerce_view_order', 'wc_gateway_xrp_thankyou_payment_info', 10);
-function wc_gateway_xrp_thankyou_payment_info($order_id)
+add_action('woocommerce_thankyou', 'wc_gateway_csc_thankyou_payment_info', 10);
+add_action('woocommerce_view_order', 'wc_gateway_csc_thankyou_payment_info', 10);
+function wc_gateway_csc_thankyou_payment_info($order_id)
 {
     $order = wc_get_order((int)$order_id);
 
-    if ($order === false || $order->get_payment_method() !== 'xrp') {
+    if ($order === false || $order->get_payment_method() !== 'csc') {
         return false;
     }
 
@@ -101,21 +101,21 @@ function wc_gateway_xrp_thankyou_payment_info($order_id)
 
     if ($order->get_status() === 'pending') {
         wp_enqueue_script(
-            'wcxrp-qrcode',
+            'wccsc-qrcode',
             plugins_url('/js/qrcodejs/qrcodejs.min.js', __FILE__),
             [
                 'jquery'
             ]
         );
         wp_enqueue_script(
-            'wcxrp-ajax',
+            'wccsc-ajax',
             plugins_url('/js/checkout.js', __FILE__),
             [
                 'jquery'
             ]
         );
         wp_localize_script(
-            'wcxrp-ajax',
+            'wccsc-ajax',
             'ajax_object',
             [
                 'ajax_url' => admin_url('admin-ajax.php'),
@@ -128,9 +128,9 @@ function wc_gateway_xrp_thankyou_payment_info($order_id)
 /**
  * Handle the AJAX callback to reload checkout details.
  */
-add_action('wp_ajax_xrp_checkout', 'wc_gateway_xrp_checkout_handler');
-add_action('wp_ajax_nopriv_xrp_checkout', 'wc_gateway_xrp_checkout_handler');
-function wc_gateway_xrp_checkout_handler()
+add_action('wp_ajax_csc_checkout', 'wc_gateway_csc_checkout_handler');
+add_action('wp_ajax_nopriv_csc_checkout', 'wc_gateway_csc_checkout_handler');
+function wc_gateway_csc_checkout_handler()
 {
     $order = wc_get_order((int)$_POST['order_id']);
 
@@ -140,18 +140,18 @@ function wc_gateway_xrp_checkout_handler()
     }
 
     $tag          = $order->get_meta('destination_tag', true);
-    $xrp_total    = round($order->get_meta('total_amount', true), 6);
-    $xrp_received = round($order->get_meta('delivered_amount', true), 6);
-    $remaining    = round((float)$xrp_total - (float)$xrp_received, 6);
+    $csc_total    = round($order->get_meta('total_amount', true), 8);
+    $csc_received = round($order->get_meta('delivered_amount', true), 8);
+    $remaining    = round((float)$csc_total - (float)$csc_received, 8);
     $status       = $order->get_status();
 
     $result = [
-        'xrp_account'   => get_option('woocommerce_xrp_settings')['xrp_account'],
+        'csc_account'   => get_option('woocommerce_csc_settings')['csc_account'],
         'tag'           => $tag,
-        'xrp_total'     => $xrp_total,
-        'xrp_received'  => $xrp_received,
-        'xrp_remaining' => $remaining,
-        'status'        => WC_Payment_XRP::get_instance()->helpers->wc_pretty_status($status),
+        'csc_total'     => $csc_total,
+        'csc_received'  => $csc_received,
+        'csc_remaining' => $remaining,
+        'status'        => WC_Payment_CSC::get_instance()->helpers->wc_pretty_status($status),
         'raw_status'    => $status
     ];
 
@@ -160,7 +160,7 @@ function wc_gateway_xrp_checkout_handler()
 }
 
 /* add new order status */
-function wc_gateway_xrp_register_overpaid_order_status()
+function wc_gateway_csc_register_overpaid_order_status()
 {
     register_post_status('wc-overpaid', [
         'label'                     => 'Overpaid',
@@ -171,25 +171,25 @@ function wc_gateway_xrp_register_overpaid_order_status()
         'label_count'               => _n_noop('Overpaid','Overpaid')
     ]);
 }
-add_action('init', 'wc_gateway_xrp_register_overpaid_order_status');
+add_action('init', 'wc_gateway_csc_register_overpaid_order_status');
 
 /* Add to list of WC Order statuses */
-function wc_gateway_xrp_add_overpaid_to_order_statuses($order_statuses)
+function wc_gateway_csc_add_overpaid_to_order_statuses($order_statuses)
 {
     $new_order_statuses = [];
     foreach ($order_statuses as $key => $status) {
         $new_order_statuses[$key] = $status;
         if ('wc-processing' === $key) {
-            $new_order_statuses['wc-overpaid'] = __('Overpaid', 'wc-gateway-xrp');
+            $new_order_statuses['wc-overpaid'] = __('Overpaid', 'wc-gateway-csc');
         }
     }
     return $new_order_statuses;
 }
-add_filter('wc_order_statuses', 'wc_gateway_xrp_add_overpaid_to_order_statuses');
+add_filter('wc_order_statuses', 'wc_gateway_csc_add_overpaid_to_order_statuses');
 
 /* add color for new order status */
-add_action('admin_head', 'wc_gateway_xrp_styling_admin_order_list');
-function wc_gateway_xrp_styling_admin_order_list()
+add_action('admin_head', 'wc_gateway_csc_styling_admin_order_list');
+function wc_gateway_csc_styling_admin_order_list()
 {
     global $pagenow, $post;
 

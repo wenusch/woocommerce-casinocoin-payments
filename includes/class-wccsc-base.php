@@ -1,33 +1,33 @@
 <?php
 
-if(!class_exists('WC_Payment_XRP')) {
+if(!class_exists('WC_Payment_CSC')) {
     /**
-     * WooCommerce XRPL Payment main class
+     * WooCommerce CSCL Payment main class
      *
      * @since 1.1.0
      */
-    class WC_Payment_XRP
+    class WC_Payment_CSC
     {
         /**
          * Single instance of the class
          *
-         * @var WC_Payment_XRP
+         * @var WC_Payment_CSC
          * @since 1.0.0
          */
         protected static $instance;
 
         /**
-         * XRP Payment gateway id
+         * CSC Payment gateway id
          *
          * @var string Id of specific gateway
          * @since 1.0
          */
-        public static $gateway_id = 'WC_Gateway_XRP';
+        public static $gateway_id = 'WC_Gateway_CSC';
 
         /**
          * The gateway object
          *
-         * @var WC_Payment_XRP
+         * @var WC_Payment_CSC
          * @since 1.0
          */
         public $gateway = null;
@@ -35,7 +35,7 @@ if(!class_exists('WC_Payment_XRP')) {
         /**
          * Returns single instance of the class
          *
-         * @return WC_Payment_XRP
+         * @return WC_Payment_CSC
          * @since 1.0.0
          */
         public static function get_instance()
@@ -50,18 +50,18 @@ if(!class_exists('WC_Payment_XRP')) {
         /**
          * Constructor.
          *
-         * @return WC_Payment_XRP
+         * @return WC_Payment_CSC
          * @since 1.1.0
          */
         public function __construct()
         {
             /* add filter to append wallet as payment gateway */
-            include_once('class-wcxrp-webhooks.php');
-            include_once('class-wcxrp-rates.php');
-            include_once('class-wcxrp-helpers.php');
-            include_once('class-wcxrp-ledger.php');
+            include_once('class-wccsc-webhooks.php');
+            include_once('class-wccsc-rates.php');
+            include_once('class-wccsc-helpers.php');
+            include_once('class-wccsc-ledger.php');
 
-            $this->helpers = new WCXRP_Helpers();
+            $this->helpers = new WCCSC_Helpers();
 
             add_filter(
                 'woocommerce_payment_gateways',
@@ -70,7 +70,7 @@ if(!class_exists('WC_Payment_XRP')) {
         }
 
         /**
-         * Adds XRP Payment Gateway to payment gateways available for woocommerce checkout
+         * Adds CSC Payment Gateway to payment gateways available for woocommerce checkout
          *
          * @param $methods array Previously available gataways, to filter with the function
          *
@@ -80,11 +80,11 @@ if(!class_exists('WC_Payment_XRP')) {
         public function add_to_gateways($methods)
         {
             self::$gateway_id = apply_filters(
-                'wc_xrp_gateway_id',
+                'wc_csc_gateway_id',
                 self::$gateway_id
             );
-            include_once('class-wcxrp-gateway.php');
-            $methods[] = 'WC_Gateway_XRP';
+            include_once('class-wccsc-gateway.php');
+            $methods[] = 'WC_Gateway_CSC';
             return $methods;
         }
     }

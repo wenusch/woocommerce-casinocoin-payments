@@ -1,35 +1,35 @@
-# WooCommerce XRP
+# CasinoCoin Payments
 
-A payment gateway for [WooCommerce](https://woocommerce.com/) to easily accept [XRP](https://ripple.com/xrp) as a payment method.
+A payment gateway for [WooCommerce](https://woocommerce.com/) to easily accept [CasinoCoin](https://casinocoin.org) as a payment method. This plugin is rebranded from the original  [XRP](https://github.com/empatogen/woocommerce-xrp) version which is coded by [Jens Twesmann](https://twitter.com/jtwesmann)
 
 ## Requirements
 
 * [PHP](https://php.net) 5.6 or greater (PHP 7.2 or higher is recommended)
 * [WordPress](https://wordpress.org/) 5.1 or greater
 * [WooCommerce](https://woocommerce.com/) 3.5.6 or greater
-* A "self-owned" and **activated** [XRP](https://ripple.com/xrp) account. (You may **not** use an Exchange!)
-* You need an account at [XRPL Webhook](https://webhook.xrpayments.co) (see below)
+* A "self-owned" and **activated** [CSC](https://casinocoin.org/) account. 
+* You need an account at [CSCL Webhook](https://webhook.casinocoin.eu) (see below)
 
 ## Installing
 
-1. Upload the plugin to the `/wp-content/plugins/woocommerce-xrp` directory folder, or install the plugin through the WordPress plugin screen directly.
+1. Upload the plugin to the `/wp-content/plugins/woocommerce-casinocoin-payments` directory folder, or install the plugin through the WordPress plugin screen directly.
 1. Activate the plugin through the `Plugins` screen in Wordpress.
-1. Create a free account at [XRPL Webhook](https://webhook.xrpayments.co) and obtain your **API keys**. This is required as the plugin uses this webhook to update the checkout page whenever a payment is made.
+1. Create a free account at [CSCL Webhook](https://webhook.casinocoin.eu) and obtain your **API keys**. This is required as the plugin uses this webhook to update the checkout page whenever a payment is made.
 1. Go to "WooCommerce -> Settings -> Payments" and configure the plugin.
 
 ## FAQ ##
 
-### Which XRP server (rippled) is used by default?
+### Which CSC server (casinocoind) is used by default?
 
-The node **s2.ripple.com** is being used to talk to the XRP network. This can easily be changed under *Advanced* and you can use any public XRP server.
+The plugin connects to **https://csc-node-de-a.casinocoin.eu:5005** for retrieving ledger data. It can be adjusted to another node if the endpoints supports json-rpc calls. 
 
-### What is XRPL Webhooks?
+### What is a CSCL Webhook?
 
-XRPL Webhooks is a free service that send HTTP requests to a specified URL each time a transaction is made to a specific XRP account. The plugin use this service to update the order in real-time when the customer makes a payment.
+A CSCL Webhook is provided by [CSCL Webhook](https://webhook.casinocoin.eu). It sends transaction data to your webshop to be able to verify a payment has been made and update the order status in real-time.
 
-### Which exchanges is supported?
+### Which exchange is supported?
 
-You can use the [decentralized exchange (DEX)](https://developers.ripple.com/decentralized-exchange.html) on the XRP Ledger, [Binance](https://www.binance.com/), [Bitbank](https://bitbank.cc/), [Bitfinex](https://www.bitfinex.com/), [Bitlish](https://bitlish.com/), [BitMEX](https://www.bitmex.com/), [Bitrue](https://www.bitrue.com/), [Bitsane](https://bitsane.com/), [Bitstamp](https://www.bitstamp.net/), [Bittrex](https://www.bittrex.com), [Bitcoin Exchange Thailand](https://bx.in.th/), [CEX.IO](https://cex.io/), [Coinbase](https://www.coinbase.com/), [Kraken](https://www.kraken.com/) or [Uphold](https://uphold.com/) as the exchange to get the XRP rate when your customer is checking out.
+Bitrue is supported for retrieving the current CasinoCoin rate. 
 
 ### Which base currencies are supported?
 
@@ -37,57 +37,21 @@ The supported currencies are AUD, BGN, BRL, CAD, CHF, CNY, CZK, DKK, EUR, GBP, H
 
 ### What does the bypass firewall feature do?
 
-By default, we speak [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on port 51234 with the XRP server. Some webservers are behind a firewall that doesn't allow outgoing traffic on non-standard ports. By enabling this feature, we talk to [cors-anywhere.herokuapp.com](https://cors-anywhere.herokuapp.com/), using TLS on port 443, which then acts as a proxy and relays the traffic to the XRP server.
+By default, [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on port 5005 is used to communicate witht the CSC Server. Some webservers are behind a firewall that doesn't allow outgoing traffic on non-standard ports. By enabling this feature, we communicating through [cors-anywhere.herokuapp.com](https://cors-anywhere.herokuapp.com/), using TLS on port 443, which acts as a proxy and relays the traffic to the CSC server.
 
 ## Changelog
 
-### 1.1.2
-* Add the decentralized exchange. (DEX)
-* Fix the text style on the checkout page.
-
-### 1.1.1
-* Add new exchanges. (Bitsane, CEX.IO, Coinbase, Uphold)
-* Add missing sanitation checks for user input.
-* Add new order status (Overpaid) for when a customer pays too much.
-* Fix potential rounding error when processing payments.
-* Fix a bug where the payment gateway was loaded twice.
-* Add so the webhook try again if we're unable to talk to the XRP node.
-
-### 1.1.0
-* Remove the use of Google Chart to generate the QR-code. Use [qrcodejs](https://github.com/davidshimjs/qrcodejs) instead.
-* Change to a singleton layout to avoid conflicting with other plugins.
-* Add check to ensure that the specified XRP account is activated.
-* Add a new exchange. ([Bitrue](https://www.bitrue.com/))
-* Fix a bug which prevents us from running on 32bit systems.
-
-### 1.0.3
-* Add 3 new exchanges. ([Bitbank](https://bitbank.cc/), [Bitcoin Exchange Thailand](https://bx.in.th/) and [Bitlish](https://bitlish.com/))
-* Add 31 new currencies.
-* Add 2 new languages. (Dutch and Japanese))
-* Add a proxy feature to bypass your servers firewall.
-* Lots of bugfixes.
-
-
-### 1.0.2
-* Add extra mitigations against [the partial payment exploit](https://developers.ripple.com/partial-payments.html#partial-payments-exploit).
-
-### 1.0.1
-* Remove the cURL dependency and use wp_remote_get() and wp_remote_post() instead.
-
 ### 1.0.0
-* Initial release!
+* Initial release of the CasinoCoin Payments plugin.
 
 ## License
 
-Please see [LICENSE](https://github.com/empatogen/woocommerce-xrp/blob/master/LICENSE).
+Please see [LICENSE](https://github.com/wenusch/woocommerce-csc/blob/master/LICENSE).
 
 ## Acknowledgments
 
-* A huge thank you to both [Ripple](https://ripple.com/) and [XRPL Labs](https://xrpl-labs.com/) for being awesome.
 * A huge thank you to [Jens Twesmann](https://twitter.com/jtwesmann) for his code contributions.
-* Thanks to the translators! ([Chronos Ananké](https://twitter.com/AnankeChronos), [Bert de Hoogh](https://twitter.com/BertdeHoogh1) and [Tarotaro](https://twitter.com/tarotaro080808))
-* Thanks to **everyone** who tests new unreleased code to help us nail bugs.
 
-## Donate
+## Donations
 
-If you like this plugin and wish to donate, feel free to send some [XRP](https://ripple.com/xrp) to **rscKqdNj1ECXamMoxxwejTnBmhwTpBvTKz**.
+I prefer CSC over Sushi, Sushi over beer, beer over coffeee. My CSC account: **cLjJ4NSXfn4w9nHNNVG8afHccp51FBU3U2**

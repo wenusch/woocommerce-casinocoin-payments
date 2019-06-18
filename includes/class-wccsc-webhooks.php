@@ -1,10 +1,10 @@
 <?php
 
-class WCXRP_Webhook
+class WCCSC_Webhook
 {
     protected $pub;
     protected $secret;
-    public $base = 'https://webhook.xrpayments.co/api/v1/';
+    public $base = 'https://webhook.casinocoin.eu/api/v1/';
     public $error = null;
 
     /**
