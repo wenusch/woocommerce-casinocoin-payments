@@ -4,7 +4,7 @@ class WCCSC_Webhook
 {
     protected $pub;
     protected $secret;
-    public $base = 'https://webhook.casinocoin.eu/api/v1/';
+    public $base = 'https://webhook.casinocoin.services/api/v1/';
     public $error = null;
 
     /**

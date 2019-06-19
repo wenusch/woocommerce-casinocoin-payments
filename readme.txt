@@ -8,13 +8,13 @@ A payment gateway for [WooCommerce](https://woocommerce.com/) to easily accept [
 * [WordPress](https://wordpress.org/) 5.1 or greater
 * [WooCommerce](https://woocommerce.com/) 3.5.6 or greater
 * A "self-owned" and **activated** [CSC](https://casinocoin.org/) account. 
-* You need an account at [CSCL Webhook](https://webhook.casinocoin.eu) (see below)
+* You need an account at [CSCL Webhook](https://webhook.casinocoin.services) (see below)
 
 == Installing ==
 
 1. Upload the plugin to the `/wp-content/plugins/woocommerce-casinocoin-payments` directory folder, or install the plugin through the WordPress plugin screen directly.
 1. Activate the plugin through the `Plugins` screen in Wordpress.
-1. Create a free account at [CSCL Webhook](https://webhook.casinocoin.eu) and obtain your **API keys**. This is required as the plugin uses this webhook to update the checkout page whenever a payment is made.
+1. Create a free account at [CSCL Webhook](https://webhook.casinocoin.services) and obtain your **API keys**. This is required as the plugin uses this webhook to update the checkout page whenever a payment is made.
 1. Go to "WooCommerce -> Settings -> Payments" and configure the plugin.
 
 == FAQ ==
@@ -25,7 +25,7 @@ The plugin connects to **https://csc-node-de-a.casinocoin.eu:5005** for retrievi
 
 === What is a CSCL Webhook? ===
 
-A CSCL Webhook is provided by [CSCL Webhook](https://webhook.casinocoin.eu). It sends transaction data to your webshop to be able to verify a payment has been made and update the order status in real-time.
+A CSCL Webhook is provided by [CSCL Webhook](https://webhook.casinocoin.services). It sends transaction data to your webshop to be able to verify a payment has been made and update the order status in real-time.
 
 === Which exchange is supported? ===
 
