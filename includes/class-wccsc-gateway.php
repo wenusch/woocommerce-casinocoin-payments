@@ -219,7 +219,7 @@ class WC_Gateway_CSC extends \WC_Payment_Gateway
             'cscl_webhook' => [
                 'title'       => __('CSCL Webhook options', 'wc-gateway-csc'),
                 'type'        => 'title',
-                'description' => __('In order to create your webhook and process your payments properly, please specify your CSCL Webhooks API key. For more informations how to obtain these keys, please visit <a href="https://webhook.cscayments.co/">https://webhook.cscayments.co</a>.', 'wc-gateway-csc')
+                'description' => __('In order to create your webhook and process your payments properly, please specify your CSCL Webhooks API key. For more informations how to obtain these keys, please visit <a href="https://webhook.casinocoin.services">https://webhook.casinocoin.services</a>.', 'wc-gateway-csc')
             ],
             'cscl_webhook_api_pub' => [
                 'title'       => __('API Key', 'wc-gateway-csc'),
