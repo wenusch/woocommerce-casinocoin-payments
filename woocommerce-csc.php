@@ -4,17 +4,14 @@
  * Plugin URI: https://github.com/wenusch/woocommerce-casinocoin-payments
  * Description: A payment gateway for WooCommerce to accept <a href="https://casinocoin.org/">CasinoCoin</a> payments.
  * Version: 1.0.0
- * Author: Jesper Wallin
- * Author URI: https://ifconfig.se/
- * Developer: Massimo Wenusch
- * Developer URI: https://github.com/wenusch
+ * Author: Massimo Wenusch
+ * Author URI: https://github.com/wenusch
  * Text Domain: wc-gateway-csc
  * Domain Path: /languages/
  *
  * WC requires at least: 3.5.6
  * WC tested up to: 3.5.6
  *
- * Copyright: © 2019 Jesper Wallin.
  * License: ISC license
  */
 

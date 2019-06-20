@@ -1,6 +1,6 @@
 # CasinoCoin Payments
 
-A payment gateway for [WooCommerce](https://woocommerce.com/) to easily accept [CasinoCoin](https://casinocoin.org) as a payment method. This plugin is rebranded from the original  [XRP](https://github.com/empatogen/woocommerce-xrp) version which is coded by [Jens Twesmann](https://twitter.com/jtwesmann)
+A payment gateway for [WooCommerce](https://woocommerce.com/) to easily accept [CasinoCoin](https://casinocoin.org) as a payment method. This plugin is rebranded from the original  [XRP](https://github.com/empatogen/woocommerce-xrp) version which is coded by [Jesper Wallin](https://twitter.com/empatogen) and [Jens Twesmann](https://twitter.com/jtwesmann)
 
 ## Requirements
 
@@ -48,10 +48,12 @@ By default, [JSON-RPC](https://en.wikipedia.org/wiki/JSON#JSON-RPC) on port 5005
 
 Please see [LICENSE](https://github.com/wenusch/woocommerce-csc/blob/master/LICENSE).
 
-## Acknowledgments
-
-* A huge thank you to [Jens Twesmann](https://twitter.com/jtwesmann) for his code contributions.
-
 ## Donations
 
-I prefer CSC over Sushi, Sushi over beer, beer over coffeee. My CSC account: **cLjJ4NSXfn4w9nHNNVG8afHccp51FBU3U2**
+Donations are welcome. Will mostly be used for Sushi. This is my CSC account: 
+
+cLjJ4NSXfn4w9nHNNVG8afHccp51FBU3U2
+
+If you would like to donate XRP, please feel free to send it to Jesper Wallin. This is his XRP account: 
+
+rscKqdNj1ECXamMoxxwejTnBmhwTpBvTKz

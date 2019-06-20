@@ -6,9 +6,9 @@
  *
  * @class       WC_Gateway_CSC
  * @extends     WC_Payment_Gateway
- * @version     1.1.2
+ * @version     1.0.0
  * @package     WooCommerce/Classes/Payment
- * @author      Jesper Wallin
+ * @author      Massimo Wenusch
  */
 class WC_Gateway_CSC extends \WC_Payment_Gateway
 {
@@ -29,10 +29,7 @@ class WC_Gateway_CSC extends \WC_Payment_Gateway
 
         /* supported exchanges */
         $this->exchanges = [
-//            'nlexch'  => 'NLExch.com',
-//            'nuex'  => 'nuex.com',
             'bitrue'  => 'bitrue.com',
-//            'stex'  => 'stex.com',
 
         ];
 

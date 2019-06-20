@@ -26,7 +26,7 @@ msgid "A payment gateway for WooCommerce to accept CasinoCoin payments."
 msgstr ""
 
 #. Author of the plugin
-msgid "Jesper Wallin"
+msgid "Massimo Wenusch"
 msgstr ""
 
 #. Author URI of the plugin
@@ -98,7 +98,7 @@ msgid "CSCL Webhook options"
 msgstr ""
 
 #: woocommerce-csc.php:228
-msgid "In order to create your webhook and process your payments properly, please specify your CSCL Webhooks API key. For more informations how to obtain these keys, please visit <a href=\"https://webhook.cscayments.co/\">https://webhook.cscayments.co</a>."
+msgid "In order to create your webhook and process your payments properly, please specify your CSCL Webhooks API key. For more informations how to obtain these keys, please visit <a href=\"https://webhook.casinocoin.services/\">https://webhook.casinocoin.services</a>."
 msgstr ""
 
 #: woocommerce-csc.php:232
