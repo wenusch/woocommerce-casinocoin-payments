@@ -12,11 +12,11 @@
     </tr>
     <tr>
         <th><?php _e('CSC total', 'wc-gateway-csc'); ?></th>
-        <td id="csc_total"><?php echo esc_html(round($order->get_meta('total_amount', true), 6)) ?></td>
+        <td id="csc_total"><?php echo esc_html(round($order->get_meta('total_amount', true), 8)) ?></td>
     </tr>
     <tr>
         <th><?php _e('CSC received', 'wc-gateway-csc'); ?></th>
-        <td id="csc_received"><?php echo esc_html(round($order->get_meta('delivered_amount', true), 6)) ?></td>
+        <td id="csc_received"><?php echo esc_html(round($order->get_meta('delivered_amount', true), 8)) ?></td>
     </tr>
     <tr>
         <th><?php _e('CSC left to pay', 'wc-gateway-csc'); ?></th>
